@@ -96,6 +96,16 @@
   "eslintConfig": {
     "extends": [
       "plugin:storybook/recommended"
-    ]
+    ],
+    "rules": {
+      "no-restricted-imports": [
+        "warn",
+        {
+          "patterns": [
+            "*/**/*.debug"
+          ]
+        }
+      ]
+    }
   }
 }
