@@ -95,6 +95,7 @@
   },
   "eslintConfig": {
     "extends": [
+      "react-app",
       "plugin:storybook/recommended"
     ],
     "rules": {
