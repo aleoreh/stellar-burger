@@ -10,7 +10,13 @@ import {
   Register,
   ResetPassword
 } from '@pages';
-import { Route, Routes, createBrowserRouter } from 'react-router-dom';
+import {
+  Route,
+  Routes,
+  createBrowserRouter,
+  useLocation,
+  useNavigate
+} from 'react-router-dom';
 import '../../index.css';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import styles from './app.module.css';
@@ -93,13 +99,37 @@ const router = createBrowserRouter([
   { path: '/*', element: <NotFound404 /> }
 ]);
 
-const App = () => (
-  <div className={styles.app}>
-    <AppHeader />
-    <Routes>
-      <Route path='/' element={<ConstructorPage />} />
-    </Routes>
-  </div>
-);
+const App = () => {
+  const location = useLocation();
+  const backgroundLocation = location.state?.backgroundLocation;
+  const navigate = useNavigate();
+  return (
+    <div className={styles.app}>
+      <AppHeader />
+
+      <Routes location={backgroundLocation || location}>
+        <Route path='/' element={<ConstructorPage />} />
+      </Routes>
+
+      {backgroundLocation && (
+        <Routes>
+          <Route
+            path='/ingredients/:id'
+            element={
+              <Modal
+                title='IngredientsDetails'
+                onClose={() => {
+                  navigate(-1);
+                }}
+              >
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+        </Routes>
+      )}
+    </div>
+  );
+};
 
 export default App;
