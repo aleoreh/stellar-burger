@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getIngredientsApi } from '../../utils/burger-api';
 import { TIngredient } from '../../utils/types';
-import Debug from '../../debug-log.debug';
 
 // ~~~~~~~~~~~~~~~~ slice ~~~~~~~~~~~~~~~~ //
 

@@ -10,11 +10,8 @@ import {
   Register,
   ResetPassword
 } from '@pages';
-import { useEffect } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import '../../index.css';
-import { fetchIngredients } from '../../services/slices/ingredientsSlice';
-import { useDispatch } from '../../app/store';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import styles from './app.module.css';
 
@@ -96,19 +93,11 @@ const router = createBrowserRouter([
   { path: '/*', element: <NotFound404 /> }
 ]);
 
-const App = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, []);
-
-  return (
-    <div className={styles.app}>
-      <AppHeader />
-      <RouterProvider router={router} />
-    </div>
-  );
-};
+const App = () => (
+  <div className={styles.app}>
+    <AppHeader />
+    <RouterProvider router={router} />
+  </div>
+);
 
 export default App;
