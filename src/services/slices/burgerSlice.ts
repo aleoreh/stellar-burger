@@ -36,6 +36,14 @@ export const burgerSlice = createSlice({
         ...state.ingredients,
         { ...action.payload, id: generateId(state.ingredients) }
       ];
+    },
+    deleteIngredient: (
+      state,
+      action: PayloadAction<TConstructorIngredient['id']>
+    ) => {
+      state.ingredients = state.ingredients.filter(
+        (x) => x.id !== action.payload
+      );
     }
   },
   selectors: {
