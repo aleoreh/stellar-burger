@@ -1,6 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getIngredientsApi } from '../../utils/burger-api';
 import { TIngredient } from '../../utils/types';
+import Debug from '../../debug-log.debug';
+
+// ~~~~~~~~~~~~~~~~ slice ~~~~~~~~~~~~~~~~ //
 
 export interface IngredientsState {
   isLoading: boolean;
@@ -21,10 +24,8 @@ export const ingredientsSlice = createSlice({
     noop: (state) => state
   },
   selectors: {
-    selectBuns: (state) => state.ingredients.filter((x) => x.type === 'bun'),
-    selectMains: (state) => state.ingredients.filter((x) => x.type === 'main'),
-    selectSauces: (state) =>
-      state.ingredients.filter((x) => x.type === 'sauce'),
+    selectIngredients: (state) => state.ingredients,
+    selectIsLoading: (state) => state.isLoading,
     selectFetchState: (state) => ({
       isLoading: state.isLoading,
       error: state.error,
@@ -33,18 +34,18 @@ export const ingredientsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchIngredients.pending, (state) => {
-        state.isLoading = true;
-      })
+      .addCase(fetchIngredients.pending, () => ({
+        ...initialState,
+        isLoading: true
+      }))
       .addCase(fetchIngredients.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Не удалось получить ингредиенты';
-        state.ingredients = initialState.ingredients;
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.ingredients.push(...action.payload);
+        state.ingredients = action.payload;
       });
   }
 });
