@@ -10,7 +10,7 @@ import {
   Register,
   ResetPassword
 } from '@pages';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { Route, Routes, createBrowserRouter } from 'react-router-dom';
 import '../../index.css';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import styles from './app.module.css';
@@ -96,7 +96,9 @@ const router = createBrowserRouter([
 const App = () => (
   <div className={styles.app}>
     <AppHeader />
-    <RouterProvider router={router} />
+    <Routes>
+      <Route path='/' element={<ConstructorPage />} />
+    </Routes>
   </div>
 );
 
