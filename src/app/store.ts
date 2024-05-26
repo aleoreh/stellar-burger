@@ -5,10 +5,12 @@ import {
   useSelector as selectorHook
 } from 'react-redux';
 import ingredientsDepot from '../services/slices/ingredientsSlice';
+import burgerDepot from '../services/slices/burgerSlice';
 
 export const store = configureStore({
   reducer: {
-    ingredients: ingredientsDepot.reducer
+    ingredients: ingredientsDepot.reducer,
+    burger: burgerDepot.reducer
   },
   devTools: process.env.NODE_ENV !== 'production'
 });
