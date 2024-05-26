@@ -1,6 +1,16 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TIngredient } from '../../utils/types';
 
+// ~~~~~~~~~~~~~~~ helpers ~~~~~~~~~~~~~~~ //
+
+const generateId = (ingredients: TConstructorIngredient[]): string => {
+  if (ingredients.length === 0) return '1';
+
+  const maxId = [...ingredients].sort((x, y) => (x.id > y.id ? -1 : 1))[0].id;
+
+  return String(parseInt(maxId) + 1);
+};
+
 // ~~~~~~~~~~~~~~~~ slice ~~~~~~~~~~~~~~~~ //
 
 export interface BurgerState {
@@ -17,8 +27,15 @@ export const burgerSlice = createSlice({
   name: 'burger',
   initialState,
   reducers: {
+    noop: (state) => state,
     putBun: (state, action: PayloadAction<TIngredient>) => {
       state.bun = action.payload;
+    },
+    addIngredient: (state, action: PayloadAction<TIngredient>) => {
+      state.ingredients = [
+        ...state.ingredients,
+        { ...action.payload, id: generateId(state.ingredients) }
+      ];
     }
   },
   selectors: {

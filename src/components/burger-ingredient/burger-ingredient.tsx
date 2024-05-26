@@ -12,9 +12,9 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
     const dispatch = useDispatch();
 
     const handleAdd = () => {
-      if (ingredient.type === 'bun') {
-        dispatch(burgerDepot.putBun(ingredient));
-      }
+      ingredient.type === 'bun'
+        ? dispatch(burgerDepot.putBun(ingredient))
+        : dispatch(burgerDepot.addIngredient(ingredient));
     };
 
     return (
