@@ -1,3 +1,4 @@
+import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import {
   ConstructorPage,
   Feed,
@@ -9,12 +10,13 @@ import {
   Register,
   ResetPassword
 } from '@pages';
-import '../../index.css';
-import styles from './app.module.css';
-
-import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
+import { useEffect } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import '../../index.css';
+import { fetchIngredients } from '../../services/slices/ingredientsSlice';
+import { useDispatch } from '../../app/store';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
+import styles from './app.module.css';
 
 const router = createBrowserRouter([
   { path: '/', element: <ConstructorPage /> },
@@ -94,11 +96,19 @@ const router = createBrowserRouter([
   { path: '/*', element: <NotFound404 /> }
 ]);
 
-const App = () => (
-  <div className={styles.app}>
-    <AppHeader />
-    <RouterProvider router={router} />
-  </div>
-);
+const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, []);
+
+  return (
+    <div className={styles.app}>
+      <AppHeader />
+      <RouterProvider router={router} />
+    </div>
+  );
+};
 
 export default App;

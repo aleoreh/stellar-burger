@@ -1,14 +1,16 @@
-import { useState, useRef, useEffect, FC } from 'react';
-import { useInView } from 'react-intersection-observer';
-
 import { TTabMode } from '@utils-types';
+import { FC, useEffect, useRef, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { useSelector } from '../../app/store';
+import ingredientsDepot from '../../services/slices/ingredientsSlice';
+import { Preloader } from '../ui';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 
 export const BurgerIngredients: FC = () => {
-  /** TODO: взять переменные из стора */
-  const buns = [];
-  const mains = [];
-  const sauces = [];
+  const buns = useSelector(ingredientsDepot.selectBuns);
+  const mains = useSelector(ingredientsDepot.selectMains);
+  const sauces = useSelector(ingredientsDepot.selectSauces);
+  const ingredientsFetchState = useSelector(ingredientsDepot.selectFetchState);
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
@@ -47,9 +49,14 @@ export const BurgerIngredients: FC = () => {
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  return null;
-
-  return (
+  return ingredientsFetchState.isLoading ? (
+    <Preloader />
+  ) : ingredientsFetchState.hasError ? (
+    <p>
+      Во время загрузки ингредиентов произошла ошибка. Попробуйте перезагрузить
+      страницу
+    </p>
+  ) : (
     <BurgerIngredientsUI
       currentTab={currentTab}
       buns={buns}
