@@ -81,14 +81,6 @@ const router = createBrowserRouter([
     )
   },
   {
-    path: '/ingredients/:id',
-    element: (
-      <Modal title='IngredientsDetails' onClose={() => {}}>
-        <IngredientDetails />
-      </Modal>
-    )
-  },
-  {
     path: '/profile/orders/:number',
     element: (
       <Modal title='OrderInfo' onClose={() => {}}>
@@ -114,10 +106,10 @@ const App = () => {
       {backgroundLocation && (
         <Routes>
           <Route
-            path='/ingredients/:id'
+            path='/ingredients/:_id'
             element={
               <Modal
-                title='IngredientsDetails'
+                title='Детали ингредиента'
                 onClose={() => {
                   navigate(-1);
                 }}
