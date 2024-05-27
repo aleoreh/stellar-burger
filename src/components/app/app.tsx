@@ -93,11 +93,21 @@ const App = () => {
 
       <Routes location={backgroundLocation || location}>
         <Route path='/' element={<ConstructorPage />} />
+
         <Route
           path='/login'
           element={
             <ProtectedRoute allowOnly='unauthorized'>
               <Login />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path='/register'
+          element={
+            <ProtectedRoute allowOnly='unauthorized'>
+              <Register />
             </ProtectedRoute>
           }
         />
