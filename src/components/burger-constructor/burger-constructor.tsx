@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../app/store';
 import authDepot from '../../services/slices/authSlice';
 import burgerDepot, { orderBurger } from '../../services/slices/burgerSlice';
-import { orderBurgerApi } from '../../utils/burger-api';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
@@ -14,6 +13,7 @@ export const BurgerConstructor: FC = () => {
   const isLoggedIn = useSelector(authDepot.isLoggedIn);
   const constructorItems = useSelector(burgerDepot.selectConstructorItems);
   const ids = useSelector(burgerDepot.selectIds);
+  const isReady = useSelector(burgerDepot.selectIsReady);
 
   const orderRequest = false;
 
@@ -52,6 +52,7 @@ export const BurgerConstructor: FC = () => {
       orderModalData={orderModalData}
       onOrderClick={onOrderClick}
       closeOrderModal={closeOrderModal}
+      isReady={isReady}
     />
   );
 };
