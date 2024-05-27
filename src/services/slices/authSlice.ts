@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { loginUserApi, registerUserApi } from '../../utils/burger-api';
 import { TUser } from '../../utils/types';
-import { loginUserApi } from '../../utils/burger-api';
 
 // ~~~~~~~~~~~~~~~~ slice ~~~~~~~~~~~~~~~~ //
 
@@ -47,6 +47,22 @@ export const authSlice = createSlice({
         ...state,
         ...action.payload,
         isCheckingAuth: false
+      }))
+      .addCase(registerUser.pending, () => ({
+        ...initialState,
+        isCheckingAuth: true
+      }))
+      .addCase(registerUser.rejected, (state, action) => ({
+        ...initialState,
+        isCheckingAuth: false,
+        error:
+          action.error.message ||
+          'Не удалось отправить запрос на авторизацию. Повторите попытку позже'
+      }))
+      .addCase(registerUser.fulfilled, (state, action) => ({
+        ...state,
+        ...action.payload,
+        isCheckingAuth: false
       }));
   }
 });
@@ -54,6 +70,8 @@ export const authSlice = createSlice({
 // ~~~~~~~~~~~~~~~~ async ~~~~~~~~~~~~~~~~ //
 
 export const loginUser = createAsyncThunk('auth/loginUser', loginUserApi);
+
+export const registerUser = createAsyncThunk('auth/register', registerUserApi);
 
 // ~~~~~~~~~~~~~~~ exports ~~~~~~~~~~~~~~~ //
 
