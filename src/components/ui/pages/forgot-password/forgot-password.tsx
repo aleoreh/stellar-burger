@@ -31,7 +31,6 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
           Восстановление пароля
         </h3>
         <form
-          {...form}
           className={`pb-15 ${styles.form}`}
           name='login'
           onSubmit={handleSubmit}
