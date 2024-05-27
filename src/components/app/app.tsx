@@ -25,14 +25,6 @@ const router = createBrowserRouter([
   { path: '/', element: <ConstructorPage /> },
   { path: '/feed', element: <Feed /> },
   {
-    path: '/login',
-    element: (
-      <ProtectedRoute>
-        <Login />
-      </ProtectedRoute>
-    )
-  },
-  {
     path: '/register',
     element: (
       <ProtectedRoute>
@@ -101,6 +93,14 @@ const App = () => {
 
       <Routes location={backgroundLocation || location}>
         <Route path='/' element={<ConstructorPage />} />
+        <Route
+          path='/login'
+          element={
+            <ProtectedRoute allowOnly='unauthorized'>
+              <Login />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
 
       {backgroundLocation && (

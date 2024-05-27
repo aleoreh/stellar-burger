@@ -1,29 +1,34 @@
 import { Navigate, useLocation } from 'react-router-dom';
+import { useSelector } from '../../app/store';
+import authDepot from '../../services/slices/authSlice';
 
 type ProtectedRouteProps = {
-  allowOnlyAuthorized?: boolean;
+  allowOnly?: 'authorized' | 'unauthorized';
   children: React.ReactElement;
 };
 
 export const ProtectedRoute = ({
-  allowOnlyAuthorized,
+  allowOnly,
   children
 }: ProtectedRouteProps) => {
-  const isCheckingAuth = false;
-  const isLoggedIn = false;
-  const user = 'user';
+  const auth = useSelector(authDepot.selectAuth);
+  const isLoggedIn = useSelector(authDepot.isLoggedIn);
+
+  const isCheckingAuth = auth.isCheckingAuth;
 
   const location = useLocation();
 
-  if (!isCheckingAuth) {
+  if (isCheckingAuth) {
     return <div>Загрузка...</div>;
   }
 
-  if (!isLoggedIn) {
+  if (allowOnly === 'unauthorized' && !isLoggedIn) return children;
+
+  if (allowOnly === 'authorized' && !isLoggedIn) {
     return <Navigate replace to='/login' state={{ from: location }} />; // в поле from объекта location.state записываем информацию о URL
   }
 
-  if (!allowOnlyAuthorized && !user) {
+  if (allowOnly === 'unauthorized' && isLoggedIn) {
     const from = location.state?.from || { pathname: '/' };
 
     return <Navigate replace to={from} />;
