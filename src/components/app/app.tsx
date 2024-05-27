@@ -105,6 +105,15 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path='/reset-password'
+          element={
+            <ProtectedRoute allowOnly='unauthorized'>
+              <ResetPassword />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
 
       {backgroundLocation && (
