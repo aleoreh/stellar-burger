@@ -4,12 +4,16 @@ import { getFeedsApi } from '../../utils/burger-api';
 
 export interface FeedState {
   orders: TOrder[];
+  total: number | undefined;
+  totalToday: number | undefined;
   pending: boolean;
   error: string | null;
 }
 
 const initialState: FeedState = {
   orders: [],
+  total: undefined,
+  totalToday: undefined,
   pending: false,
   error: null
 };
@@ -35,11 +39,12 @@ export const feedSlice = createSlice({
           action.error.message ||
           'Не удалось получить список заказов. Попробуйте получить его позже';
       })
-      .addCase(getFeeds.fulfilled, (state, action) => {
-        state.pending = false;
-        state.error = null;
-        state.orders = action.payload.orders;
-      })
+      .addCase(getFeeds.fulfilled, (state, action) => ({
+        ...state,
+        pending: false,
+        error: null,
+        ...action.payload
+      }))
 });
 
 // ~~~~~~~~~~~~~~~~ async ~~~~~~~~~~~~~~~~ //
