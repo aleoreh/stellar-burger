@@ -1,25 +1,34 @@
-import { BurgerConstructorUI } from '@ui';
+import { BurgerConstructorUI, Preloader } from '@ui';
 import { TConstructorIngredient } from '@utils-types';
 import { FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from '../../app/store';
+import { useDispatch, useSelector } from '../../app/store';
 import authDepot from '../../services/slices/authSlice';
-import burgerDepot from '../../services/slices/burgerSlice';
+import burgerDepot, { orderBurger } from '../../services/slices/burgerSlice';
+import { orderBurgerApi } from '../../utils/burger-api';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const isLoggedIn = useSelector(authDepot.isLoggedIn);
   const constructorItems = useSelector(burgerDepot.selectConstructorItems);
+  const ids = useSelector(burgerDepot.selectIds);
 
   const orderRequest = false;
 
-  const orderModalData = null;
+  const orderModalData = constructorItems.newOrder;
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
     if (!isLoggedIn) navigate('/login');
+
+    dispatch(orderBurger(ids));
   };
-  const closeOrderModal = () => {};
+
+  const closeOrderModal = () => {
+    dispatch(burgerDepot.clear());
+  };
 
   const price = useMemo(
     () =>
@@ -31,7 +40,11 @@ export const BurgerConstructor: FC = () => {
     [constructorItems]
   );
 
-  return (
+  return constructorItems.sending ? (
+    <Preloader />
+  ) : constructorItems.sendingError !== null ? (
+    <div>{constructorItems.sendingError}</div>
+  ) : (
     <BurgerConstructorUI
       price={price}
       orderRequest={orderRequest}
