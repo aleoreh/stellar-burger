@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from '../../app/store';
 import authDepot from '../../services/slices/authSlice';
+import { Preloader } from '../ui';
 
 type ProtectedRouteProps = {
   allowOnly?: 'authorized' | 'unauthorized';
@@ -14,12 +15,10 @@ export const ProtectedRoute = ({
   const auth = useSelector(authDepot.selectAuth);
   const isLoggedIn = useSelector(authDepot.isLoggedIn);
 
-  const isCheckingAuth = auth.isCheckingAuth;
-
   const location = useLocation();
 
-  if (isCheckingAuth) {
-    return <div>Загрузка...</div>;
+  if (auth.isCheckingAuth) {
+    return <Preloader />;
   }
 
   if (allowOnly === 'unauthorized' && !isLoggedIn) return children;
