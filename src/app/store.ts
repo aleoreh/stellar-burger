@@ -6,11 +6,13 @@ import {
 } from 'react-redux';
 import ingredientsDepot from '../services/slices/ingredientsSlice';
 import burgerDepot from '../services/slices/burgerSlice';
+import authDepot from '../services/slices/authSlice';
 
 export const store = configureStore({
   reducer: {
     ingredients: ingredientsDepot.reducer,
-    burger: burgerDepot.reducer
+    burger: burgerDepot.reducer,
+    auth: authDepot.reducer
   },
   devTools: process.env.NODE_ENV !== 'production'
 });
