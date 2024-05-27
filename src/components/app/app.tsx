@@ -38,22 +38,6 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     )
   },
-  {
-    path: '/feed/:number',
-    element: (
-      <Modal title='OrderInfo' onClose={() => {}}>
-        <OrderInfo />
-      </Modal>
-    )
-  },
-  {
-    path: '/profile/orders/:number',
-    element: (
-      <Modal title='OrderInfo' onClose={() => {}}>
-        <OrderInfo />
-      </Modal>
-    )
-  },
   { path: '/*', element: <NotFound404 /> }
 ]);
 
@@ -105,6 +89,34 @@ const App = () => {
         />
 
         <Route path='/feed' element={<Feed />} />
+
+        <Route
+          path='/feed/:number'
+          element={
+            <Modal
+              title='Информация о заказе'
+              onClose={() => {
+                navigate(-1);
+              }}
+            >
+              <OrderInfo />
+            </Modal>
+          }
+        />
+
+        <Route
+          path='/profile/orders/:number'
+          element={
+            <Modal
+              title='Информация о заказе'
+              onClose={() => {
+                navigate(-1);
+              }}
+            >
+              <OrderInfo />
+            </Modal>
+          }
+        />
       </Routes>
 
       {backgroundLocation && (
