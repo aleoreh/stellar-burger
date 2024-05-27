@@ -20,7 +20,9 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
           <p className='text text_type_main-default ml-2 mr-10'>Конструктор</p>
         </>
         <>
-          <ListIcon type={'primary'} />
+          <Link to='/feed'>
+            <ListIcon type={'primary'} />
+          </Link>
           <p className='text text_type_main-default ml-2'>Лента заказов</p>
         </>
       </div>
