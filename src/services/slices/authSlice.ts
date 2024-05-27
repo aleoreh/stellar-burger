@@ -6,16 +6,12 @@ import { TUser } from '../../utils/types';
 
 export interface AuthState {
   user: TUser | null;
-  accessToken: string;
-  refreshToken: string;
   isCheckingAuth: boolean;
   error: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
-  accessToken: '',
-  refreshToken: '',
   isCheckingAuth: false,
   error: null
 };
@@ -45,7 +41,8 @@ export const authSlice = createSlice({
       }))
       .addCase(loginUser.fulfilled, (state, action) => ({
         ...state,
-        ...action.payload,
+        error: null,
+        user: action.payload.user,
         isCheckingAuth: false
       }))
       .addCase(registerUser.pending, () => ({
