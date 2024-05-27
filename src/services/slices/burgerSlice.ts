@@ -1,6 +1,6 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { TConstructorIngredient, TIngredient } from '../../utils/types';
-import Debug from '../../debug-log.debug';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { TConstructorIngredient, TIngredient, TOrder } from '../../utils/types';
+import { orderBurgerApi } from '../../utils/burger-api';
 
 // ~~~~~~~~~~~~~~~ helpers ~~~~~~~~~~~~~~~ //
 
@@ -17,11 +17,17 @@ const generateId = (ingredients: TConstructorIngredient[]): string => {
 export interface BurgerState {
   bun: TIngredient | undefined;
   ingredients: TConstructorIngredient[];
+  sending: boolean;
+  sendingError: string | null;
+  newOrder: TOrder | null;
 }
 
 const initialState: BurgerState = {
   bun: undefined,
-  ingredients: []
+  ingredients: [],
+  sending: false,
+  sendingError: null,
+  newOrder: null
 };
 
 export const burgerSlice = createSlice({
@@ -48,9 +54,35 @@ export const burgerSlice = createSlice({
     }
   },
   selectors: {
-    selectConstructorItems: (state) => state
-  }
+    selectConstructorItems: (state) => state,
+    selectIds: (state): Array<TConstructorIngredient['_id']> =>
+      [state.bun?._id || '', ...state.ingredients.map((x) => x._id)].filter(
+        (x) => x !== ''
+      )
+  },
+  extraReducers: (builder) =>
+    builder
+      .addCase(orderBurger.pending, (state) => {
+        state.sending = true;
+      })
+      .addCase(orderBurger.rejected, (state, action) => {
+        (state.sending = false),
+          (state.sendingError =
+            'Не удалось отправить заказ. Повторите попытку позже');
+      })
+      .addCase(orderBurger.fulfilled, (state, action) => {
+        state.sending = false;
+        state.sendingError = null;
+        state.newOrder = action.payload.order;
+      })
 });
+
+// ~~~~~~~~~~~~~~~~ async ~~~~~~~~~~~~~~~~ //
+
+export const orderBurger = createAsyncThunk(
+  'burger/orderBurger',
+  orderBurgerApi
+);
 
 // ~~~~~~~~~~~~~~~ exports ~~~~~~~~~~~~~~~ //
 
