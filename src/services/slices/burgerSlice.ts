@@ -51,7 +51,8 @@ export const burgerSlice = createSlice({
       state.ingredients = state.ingredients.filter(
         (x) => x.id !== action.payload
       );
-    }
+    },
+    clear: () => initialState
   },
   selectors: {
     selectConstructorItems: (state) => state,
