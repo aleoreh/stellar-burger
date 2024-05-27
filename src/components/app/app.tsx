@@ -24,22 +24,7 @@ import styles from './app.module.css';
 const router = createBrowserRouter([
   { path: '/', element: <ConstructorPage /> },
   { path: '/feed', element: <Feed /> },
-  {
-    path: '/register',
-    element: (
-      <ProtectedRoute>
-        <Register />
-      </ProtectedRoute>
-    )
-  },
-  {
-    path: '/forgot-password',
-    element: (
-      <ProtectedRoute>
-        <ForgotPassword />
-      </ProtectedRoute>
-    )
-  },
+
   {
     path: '/reset-password',
     element: (
@@ -108,6 +93,15 @@ const App = () => {
           element={
             <ProtectedRoute allowOnly='unauthorized'>
               <Register />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path='/forgot-password'
+          element={
+            <ProtectedRoute allowOnly='unauthorized'>
+              <ForgotPassword />
             </ProtectedRoute>
           }
         />
