@@ -22,17 +22,6 @@ import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import styles from './app.module.css';
 
 const router = createBrowserRouter([
-  { path: '/', element: <ConstructorPage /> },
-  { path: '/feed', element: <Feed /> },
-
-  {
-    path: '/reset-password',
-    element: (
-      <ProtectedRoute>
-        <ResetPassword />
-      </ProtectedRoute>
-    )
-  },
   {
     path: '/profile',
     element: (
@@ -114,6 +103,8 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route path='/feed' element={<Feed />} />
       </Routes>
 
       {backgroundLocation && (
