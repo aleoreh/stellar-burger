@@ -14,7 +14,7 @@ const generateId = (ingredients: TConstructorIngredient[]): string => {
 
 // ~~~~~~~~~~~~~~~~ slice ~~~~~~~~~~~~~~~~ //
 
-export interface BurgerState {
+export interface OrderState {
   bun: TIngredient | undefined;
   ingredients: TConstructorIngredient[];
   sending: boolean;
@@ -22,7 +22,7 @@ export interface BurgerState {
   newOrder: TOrder | null;
 }
 
-const initialState: BurgerState = {
+const initialState: OrderState = {
   bun: undefined,
   ingredients: [],
   sending: false,
@@ -30,8 +30,8 @@ const initialState: BurgerState = {
   newOrder: null
 };
 
-export const burgerSlice = createSlice({
-  name: 'burger',
+export const orderSlice = createSlice({
+  name: 'order',
   initialState,
   reducers: {
     noop: (state) => state,
@@ -88,10 +88,10 @@ export const orderBurger = createAsyncThunk(
 
 // ~~~~~~~~~~~~~~~ exports ~~~~~~~~~~~~~~~ //
 
-export const burgerDepot = {
-  reducer: burgerSlice.reducer,
-  ...burgerSlice.actions,
-  ...burgerSlice.selectors
+export const orderDepot = {
+  reducer: orderSlice.reducer,
+  ...orderSlice.actions,
+  ...orderSlice.selectors
 };
 
-export default burgerDepot;
+export default orderDepot;

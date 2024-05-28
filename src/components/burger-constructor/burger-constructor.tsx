@@ -4,16 +4,16 @@ import { FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../app/store';
 import authDepot from '../../services/slices/authSlice';
-import burgerDepot, { orderBurger } from '../../services/slices/burgerSlice';
+import orderDepot, { orderBurger } from '../../services/slices/orderSlice';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const isLoggedIn = useSelector(authDepot.isLoggedIn);
-  const constructorItems = useSelector(burgerDepot.selectConstructorItems);
-  const ids = useSelector(burgerDepot.selectIds);
-  const isReady = useSelector(burgerDepot.selectIsReady);
+  const constructorItems = useSelector(orderDepot.selectConstructorItems);
+  const ids = useSelector(orderDepot.selectIds);
+  const isReady = useSelector(orderDepot.selectIsReady);
 
   const orderRequest = false;
 
@@ -27,7 +27,7 @@ export const BurgerConstructor: FC = () => {
   };
 
   const closeOrderModal = () => {
-    dispatch(burgerDepot.clear());
+    dispatch(orderDepot.clear());
   };
 
   const price = useMemo(
