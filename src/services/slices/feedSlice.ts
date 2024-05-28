@@ -1,6 +1,13 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice
+} from '@reduxjs/toolkit';
 import { TOrder } from '../../utils/types';
 import { getFeedsApi } from '../../utils/burger-api';
+
+const selectOrder = (state: FeedState) => (_id: string) =>
+  state.orders.find((x) => x._id === _id);
 
 export interface FeedState {
   orders: TOrder[];
@@ -25,7 +32,8 @@ export const feedSlice = createSlice({
     noop: (x) => x
   },
   selectors: {
-    selectFeed: (state) => state
+    selectFeed: (state) => state,
+    selectOrders: (state) => state.orders
   },
   extraReducers: (builder) =>
     builder
@@ -51,12 +59,20 @@ export const feedSlice = createSlice({
 
 export const getFeeds = createAsyncThunk('feed/getFeeds', getFeedsApi);
 
+// ~~~~~~~~~~~~~~~ helpers ~~~~~~~~~~~~~~~ //
+
+export const getFeedOrderByNumber = (
+  orders: FeedState['orders'],
+  number: TOrder['number']
+) => orders.find((x) => x.number === number);
+
 // ~~~~~~~~~~~~~~~ exports ~~~~~~~~~~~~~~~ //
 
 export const feedDepot = {
   reducer: feedSlice.reducer,
   ...feedSlice.actions,
-  ...feedSlice.selectors
+  ...feedSlice.selectors,
+  getOrderByNumber: getFeedOrderByNumber
 };
 
 export default feedDepot;
