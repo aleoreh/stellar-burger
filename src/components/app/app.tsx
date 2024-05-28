@@ -17,7 +17,10 @@ import {
   useLocation,
   useNavigate
 } from 'react-router-dom';
+import { useDispatch } from '../../app/store';
 import '../../index.css';
+import { getFeeds } from '../../services/slices/feedSlice';
+import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import styles from './app.module.css';
 
@@ -45,6 +48,11 @@ const App = () => {
   const location = useLocation();
   const backgroundLocation = location.state?.backgroundLocation;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  dispatch(getFeeds());
+  dispatch(fetchIngredients());
+
   return (
     <div className={styles.app}>
       <AppHeader />
