@@ -12,6 +12,15 @@ const generateId = (ingredients: TConstructorIngredient[]): string => {
   return String(parseInt(maxId) + 1);
 };
 
+const moveInPlace = (
+  arr: Array<unknown>,
+  srcIndex: number,
+  destIndex: number
+) => {
+  var elem = arr.splice(srcIndex, 1)[0];
+  arr.splice(destIndex, 0, elem);
+};
+
 // ~~~~~~~~~~~~~~~~ slice ~~~~~~~~~~~~~~~~ //
 
 export interface OrderState {
@@ -52,7 +61,19 @@ export const orderSlice = createSlice({
         (x) => x.id !== action.payload
       );
     },
-    clear: () => initialState
+    clear: () => initialState,
+    moveUp: (state, action: PayloadAction<number>) => {
+      const index = action.payload;
+      if (index === 0) return;
+
+      moveInPlace(state.ingredients, index, index - 1);
+    },
+    moveDown: (state, action: PayloadAction<number>) => {
+      const index = action.payload;
+      if (index === state.ingredients.length - 1) return;
+
+      moveInPlace(state.ingredients, index, index + 1);
+    }
   },
   selectors: {
     selectConstructorItems: (state) => state,
