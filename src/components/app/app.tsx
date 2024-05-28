@@ -10,6 +10,7 @@ import {
   Register,
   ResetPassword
 } from '@pages';
+import { useEffect } from 'react';
 import {
   Route,
   Routes,
@@ -50,8 +51,10 @@ const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  dispatch(getFeeds());
-  dispatch(fetchIngredients());
+  useEffect(() => {
+    dispatch(getFeeds());
+    dispatch(fetchIngredients());
+  }, []);
 
   return (
     <div className={styles.app}>

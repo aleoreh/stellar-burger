@@ -1,22 +1,13 @@
 import clsx from 'clsx';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { useSelector } from 'react-redux';
-import { useDispatch } from '../../app/store';
 import { BurgerConstructor, BurgerIngredients } from '../../components';
 import { Preloader } from '../../components/ui';
-import ingredientsDepot, {
-  fetchIngredients
-} from '../../services/slices/ingredientsSlice';
+import ingredientsDepot from '../../services/slices/ingredientsSlice';
 import styles from './constructor-page.module.css';
 
 export const ConstructorPage: FC = () => {
-  const dispatch = useDispatch();
-
   const isIngredientsLoading = useSelector(ingredientsDepot.selectIsLoading);
-
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, []);
 
   return (
     <>
