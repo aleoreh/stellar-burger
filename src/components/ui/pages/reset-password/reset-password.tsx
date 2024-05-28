@@ -27,7 +27,7 @@ export const ResetPasswordUI: FC<ResetPasswordUIProps> = ({
     validators.password
   );
 
-  const form = useFormValidation([passwordInput]);
+  const { inputs, isValid } = useFormValidation({ passwordInput });
 
   return (
     <main className={styles.container}>
@@ -41,7 +41,7 @@ export const ResetPasswordUI: FC<ResetPasswordUIProps> = ({
           onSubmit={handleSubmit}
         >
           <div className='pb-6'>
-            <PasswordInput {...passwordInput} name='password' />
+            <PasswordInput {...inputs.passwordInput} name='password' />
           </div>
           <div className='pb-6'>
             <Input
@@ -60,7 +60,7 @@ export const ResetPasswordUI: FC<ResetPasswordUIProps> = ({
               type='primary'
               size='medium'
               htmlType='submit'
-              disabled={!form.isValid}
+              disabled={!isValid}
             >
               Сохранить
             </Button>

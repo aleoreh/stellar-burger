@@ -22,7 +22,7 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
     validators.email
   );
 
-  const form = useFormValidation([emailInput]);
+  const { inputs, isValid } = useFormValidation({ emailInput });
 
   return (
     <main className={styles.container}>
@@ -37,7 +37,7 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
         >
           <div className='pb-6'>
             <Input
-              {...emailInput}
+              {...inputs.emailInput}
               type='email'
               placeholder='Укажите e-mail'
               size='default'
@@ -48,7 +48,7 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
               type='primary'
               size='medium'
               htmlType='submit'
-              disabled={!form.isValid}
+              disabled={!isValid}
             >
               Восстановить
             </Button>

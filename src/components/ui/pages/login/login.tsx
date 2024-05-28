@@ -34,7 +34,7 @@ export const LoginUI: FC<LoginUIProps> = ({
     validators.password
   );
 
-  const form = useFormValidation([emailInput, passwordInput]);
+  const { inputs, isValid } = useFormValidation({ emailInput, passwordInput });
 
   return (
     <main className={styles.container}>
@@ -48,21 +48,21 @@ export const LoginUI: FC<LoginUIProps> = ({
           <>
             <div className='pb-6'>
               <Input
-                {...emailInput}
+                {...inputs.emailInput}
                 type='email'
                 placeholder='E-mail'
                 size='default'
               />
             </div>
             <div className='pb-6'>
-              <PasswordInput {...passwordInput} />
+              <PasswordInput {...inputs.passwordInput} />
             </div>
             <div className={`pb-6 ${styles.button}`}>
               <Button
                 type='primary'
                 size='medium'
                 htmlType='submit'
-                disabled={!form.isValid}
+                disabled={!isValid}
               >
                 Войти
               </Button>

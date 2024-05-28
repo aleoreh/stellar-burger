@@ -43,7 +43,11 @@ export const RegisterUI: FC<RegisterUIProps> = ({
     validators.password
   );
 
-  const form = useFormValidation([nameInput, emailInput, passwordInput]);
+  const { inputs, isValid } = useFormValidation({
+    nameInput,
+    emailInput,
+    passwordInput
+  });
 
   return (
     <main className={styles.container}>
@@ -58,7 +62,7 @@ export const RegisterUI: FC<RegisterUIProps> = ({
           <>
             <div className='pb-6'>
               <Input
-                {...nameInput}
+                {...inputs.nameInput}
                 type='text'
                 placeholder='Имя'
                 size='default'
@@ -66,21 +70,21 @@ export const RegisterUI: FC<RegisterUIProps> = ({
             </div>
             <div className='pb-6'>
               <Input
-                {...emailInput}
+                {...inputs.emailInput}
                 type='email'
                 placeholder='E-mail'
                 size={'default'}
               />
             </div>
             <div className='pb-6'>
-              <PasswordInput {...passwordInput} />
+              <PasswordInput {...inputs.passwordInput} />
             </div>
             <div className={`pb-6 ${styles.button}`}>
               <Button
                 type='primary'
                 size='medium'
                 htmlType='submit'
-                disabled={!form.isValid}
+                disabled={!isValid}
               >
                 Зарегистрироваться
               </Button>

@@ -64,9 +64,22 @@ export const useValidatedField = <N extends string>(
   };
 };
 
-export const useFormValidation = <T, N>(fields: ValidatedField<keyof N>[]) => ({
-  isValid: fields.every((value) => !value['data-initial'] && !value.error)
-});
+export const useFormValidation = <
+  T extends {},
+  K extends keyof T,
+  N extends string
+>(inputs: {
+  [K in keyof T]: ValidatedField<N>;
+}) => {
+  let isValid = true;
+  for (const key of Object.keys(inputs) as K[]) {
+    isValid = isValid && !inputs[key]['data-initial'] && !inputs[key].error;
+  }
+  return {
+    inputs,
+    isValid
+  };
+};
 
 // ~~~~~~~~~~~~~~~ exports ~~~~~~~~~~~~~~~ //
 
