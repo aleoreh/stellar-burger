@@ -27,14 +27,6 @@ import styles from './app.module.css';
 
 const router = createBrowserRouter([
   {
-    path: '/profile',
-    element: (
-      <ProtectedRoute>
-        <Profile />
-      </ProtectedRoute>
-    )
-  },
-  {
     path: '/profile/orders',
     element: (
       <ProtectedRoute>
@@ -126,6 +118,15 @@ const App = () => {
             >
               <OrderInfo />
             </Modal>
+          }
+        />
+
+        <Route
+          path='/profile'
+          element={
+            <ProtectedRoute allowOnly='authorized'>
+              <Profile />
+            </ProtectedRoute>
           }
         />
       </Routes>
