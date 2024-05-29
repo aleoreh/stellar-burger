@@ -1,5 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { loginUserApi, registerUserApi } from '../../utils/burger-api';
+import {
+  TLoginData,
+  TRegisterData,
+  loginUserApi,
+  logoutApi,
+  registerUserApi,
+  updateUserApi
+} from '../../utils/burger-api';
+import { deleteCookie, setCookie } from '../../utils/cookie';
 import { TUser } from '../../utils/types';
 
 // ~~~~~~~~~~~~~~~~ slice ~~~~~~~~~~~~~~~~ //
@@ -59,7 +67,8 @@ export const authSlice = createSlice({
       }))
       .addCase(registerUser.fulfilled, (state, action) => ({
         ...state,
-        ...action.payload,
+        error: null,
+        user: action.payload.user,
         isCheckingAuth: false
       }));
   }
@@ -67,9 +76,35 @@ export const authSlice = createSlice({
 
 // ~~~~~~~~~~~~~~~~ async ~~~~~~~~~~~~~~~~ //
 
-export const loginUser = createAsyncThunk('auth/loginUser', loginUserApi);
+export const loginUser = createAsyncThunk(
+  'auth/loginUser',
+  (data: TLoginData) =>
+    loginUserApi(data)
+      .then((res) => {
+        setCookie('accessToken', res.accessToken);
+        localStorage.setItem('refreshToken', res.refreshToken);
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      })
+);
 
-export const registerUser = createAsyncThunk('auth/register', registerUserApi);
+export const registerUser = createAsyncThunk(
+  'auth/register',
+  (data: TRegisterData) =>
+    registerUserApi(data)
+      .then((res) => {
+        setCookie('accessToken', res.accessToken);
+        localStorage.setItem('refreshToken', res.refreshToken);
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      })
+);
+
+
 
 // ~~~~~~~~~~~~~~~ exports ~~~~~~~~~~~~~~~ //
 
