@@ -25,17 +25,7 @@ import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import styles from './app.module.css';
 
-const router = createBrowserRouter([
-  {
-    path: '/profile/orders',
-    element: (
-      <ProtectedRoute>
-        <ProfileOrders />
-      </ProtectedRoute>
-    )
-  },
-  { path: '/*', element: <NotFound404 /> }
-]);
+const router = createBrowserRouter([{ path: '/*', element: <NotFound404 /> }]);
 
 const App = () => {
   const location = useLocation();
@@ -126,6 +116,15 @@ const App = () => {
           element={
             <ProtectedRoute allowOnly='authorized'>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path='/profile/orders'
+          element={
+            <ProtectedRoute allowOnly='authorized'>
+              <ProfileOrders />
             </ProtectedRoute>
           }
         />
