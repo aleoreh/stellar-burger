@@ -24,7 +24,8 @@ export const authSlice = createSlice({
   },
   selectors: {
     selectAuth: (state) => state,
-    isLoggedIn: (state) => state.user !== null
+    isLoggedIn: (state) => state.user !== null,
+    selectUser: (state) => state.user
   },
   extraReducers: (builder) => {
     builder
