@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type ValidatedField<N> = {
   name: N;
@@ -19,6 +19,8 @@ const createValidator = (validate: Validate, message: string): Validator => ({
 });
 
 // ~~~~~~~~~~~~~~ validators ~~~~~~~~~~~~~ //
+
+const alwaysValid: Validator = createValidator(() => true, '');
 
 const email: Validator = createValidator(
   (value: string) =>
@@ -42,8 +44,22 @@ export const useValidatedField = <N extends string>(
   name: N,
   value: string,
   setValue: (value: string) => void,
-  validator: Validator
+  validator: Validator,
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 ): ValidatedField<N> => {
+  useEffect(() => {
+    if (isInitial) {
+      setIsInitial(false);
+      return;
+    }
+    if (validator.validate(value)) {
+      setError(undefined);
+    } else {
+      setError(validator.message);
+    }
+    setIsInitial(false);
+  }, [value]);
+
   const [isInitial, setIsInitial] = useState(true);
   const [error, setError] = useState<string | undefined>(undefined);
   return {
@@ -51,12 +67,8 @@ export const useValidatedField = <N extends string>(
     value,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
       setIsInitial(false);
-      if (validator.validate(e.target.value)) {
-        setError(undefined);
-      } else {
-        setError(validator.message);
-      }
       setValue(e.target.value);
+      onChange?.(e);
     },
     error: error !== undefined,
     errorText: error || '',
@@ -84,6 +96,7 @@ export const useFormValidation = <
 // ~~~~~~~~~~~~~~~ exports ~~~~~~~~~~~~~~~ //
 
 export const validators = {
+  alwaysValid,
   email,
   nonEmptyString,
   password
