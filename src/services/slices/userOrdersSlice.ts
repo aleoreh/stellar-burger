@@ -3,8 +3,8 @@ import { getOrdersApi } from '../../utils/burger-api';
 import {
   RemoteData,
   fulfilled,
-  notAsked,
   isFulfilled,
+  notAsked,
   rejected,
   remoteData,
   waiting
@@ -26,7 +26,9 @@ export const userOrdersSlice = createSlice({
     noop: (state) => state
   },
   selectors: {
-    selectOrders: (state) =>
+    selectIsPending: (state) => remoteData.isWaiting(state.orders),
+    selectIsError: (state) => remoteData.isRejected(state.orders),
+    selectOrdersValue: (state) =>
       isFulfilled(state.orders) ? remoteData.getValue(state.orders) : []
   },
   extraReducers: (builder) =>

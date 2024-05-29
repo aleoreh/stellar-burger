@@ -1,10 +1,20 @@
 import { ProfileOrdersUI } from '@ui-pages';
-import { TOrder } from '@utils-types';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from '../../app/store';
+import { Preloader } from '../../components/ui';
+import authDepot from '../../services/slices/authSlice';
+import userOrdersDepot from '../../services/slices/userOrdersSlice';
 
 export const ProfileOrders: FC = () => {
-  /** TODO: взять переменную из стора */
-  const orders: TOrder[] = [];
+  const dispatch = useDispatch();
 
-  return <ProfileOrdersUI orders={orders} />;
+  const auth = useSelector(authDepot.selectAuth);
+  const orders = useSelector(userOrdersDepot.selectOrdersValue);
+  const isPending = useSelector(userOrdersDepot.selectIsPending);
+
+  useEffect(() => {
+    dispatch(userOrdersDepot.getUserOrders());
+  }, [auth.user]);
+
+  return isPending ? <Preloader /> : <ProfileOrdersUI orders={orders} />;
 };
