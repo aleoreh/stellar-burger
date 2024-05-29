@@ -70,7 +70,26 @@ export const authSlice = createSlice({
         error: null,
         user: action.payload.user,
         isCheckingAuth: false
-      }));
+      }))
+      .addCase(updateUser.pending, (state) => {
+        state.isCheckingAuth = true;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isCheckingAuth = false;
+        state.error =
+          action.error.message ||
+          'Не удалось отправить запрос на обновление. Повторите попытку позже';
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.isCheckingAuth = false;
+        state.error = null;
+        state.user = action.payload.user;
+      })
+      // ~~~~~~~~~~~~~~ logoutUser ~~~~~~~~~~~~~ //
+      .addCase(logoutUser.pending, (state) => {
+        state.isCheckingAuth = true;
+      })
+      .addCase(logoutUser.fulfilled, () => initialState);
   }
 });
 
@@ -104,7 +123,14 @@ export const registerUser = createAsyncThunk(
       })
 );
 
+export const updateUser = createAsyncThunk('auth/updateUser', updateUserApi);
 
+export const logoutUser = createAsyncThunk('auth/logoutUser', () =>
+  logoutApi().then(() => {
+    deleteCookie('accessToken');
+    localStorage.removeItem('refreshToken');
+  })
+);
 
 // ~~~~~~~~~~~~~~~ exports ~~~~~~~~~~~~~~~ //
 
