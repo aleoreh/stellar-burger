@@ -1,11 +1,16 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
-import { useSelector } from '../../app/store';
-import authDepot from '../../services/slices/authSlice';
+import { useDispatch, useSelector } from '../../app/store';
+import authDepot, { updateUser } from '../../services/slices/authSlice';
+import { Preloader } from '../../components/ui';
 
 export const Profile: FC = () => {
+  const dispatch = useDispatch();
+
   const user = useSelector(authDepot.selectUser);
   if (user === null) return null;
+
+  const asyncState = useSelector(authDepot.selectAsyncState);
 
   const [formValue, setFormValue] = useState({
     name: user.name,
@@ -28,6 +33,7 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    dispatch(updateUser(formValue));
   };
 
   const handleCancel = (e: SyntheticEvent) => {
@@ -46,13 +52,16 @@ export const Profile: FC = () => {
     }));
   };
 
-  return (
+  return asyncState.pending ? (
+    <Preloader />
+  ) : (
     <ProfileUI
       formValue={formValue}
       isFormChanged={isFormChanged}
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
       handleInputChange={handleInputChange}
+      updateUserError={asyncState.error || undefined}
     />
   );
 
