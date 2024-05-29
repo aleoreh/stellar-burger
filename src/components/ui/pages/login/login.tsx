@@ -31,7 +31,7 @@ export const LoginUI: FC<LoginUIProps> = ({
     'password',
     password,
     setPassword,
-    validators.password
+    validators.alwaysValid
   );
 
   const { inputs, isValid } = useFormValidation({ emailInput, passwordInput });
