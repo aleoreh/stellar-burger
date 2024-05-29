@@ -4,17 +4,19 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
-import ingredientsDepot from '../services/slices/ingredientsSlice';
-import orderDepot from '../services/slices/orderSlice';
 import authDepot from '../services/slices/authSlice';
 import feedDepot from '../services/slices/feedSlice';
+import ingredientsDepot from '../services/slices/ingredientsSlice';
+import orderDepot from '../services/slices/orderSlice';
+import userOrdersDepot from '../services/slices/userOrdersSlice';
 
 export const store = configureStore({
   reducer: {
     ingredients: ingredientsDepot.reducer,
     order: orderDepot.reducer,
     auth: authDepot.reducer,
-    feed: feedDepot.reducer
+    feed: feedDepot.reducer,
+    userOrders: userOrdersDepot.reducer
   },
   devTools: process.env.NODE_ENV !== 'production'
 });
