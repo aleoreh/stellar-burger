@@ -25,8 +25,6 @@ import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import styles from './app.module.css';
 
-const router = createBrowserRouter([{ path: '/*', element: <NotFound404 /> }]);
-
 const App = () => {
   const location = useLocation();
   const backgroundLocation = location.state?.backgroundLocation;
@@ -128,6 +126,8 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route path='*' element={<NotFound404 />} />
       </Routes>
 
       {backgroundLocation && (
