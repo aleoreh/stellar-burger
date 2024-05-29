@@ -14,6 +14,7 @@ import { TUser } from '../../utils/types';
 
 export interface AuthState {
   user: TUser | null;
+  // TODO: лучше разделить флаги для каждого асинхронного действия
   isCheckingAuth: boolean;
   error: string | null;
 }
@@ -33,10 +34,15 @@ export const authSlice = createSlice({
   selectors: {
     selectAuth: (state) => state,
     isLoggedIn: (state) => state.user !== null,
-    selectUser: (state) => state.user
+    selectUser: (state) => state.user,
+    selectAsyncState: (state) => ({
+      pending: state.isCheckingAuth,
+      error: state.error
+    })
   },
   extraReducers: (builder) => {
     builder
+      // ~~~~~~~~~~~~~~ loginUser ~~~~~~~~~~~~~~ //
       .addCase(loginUser.pending, () => ({
         ...initialState,
         isCheckingAuth: true
@@ -54,6 +60,7 @@ export const authSlice = createSlice({
         user: action.payload.user,
         isCheckingAuth: false
       }))
+      // ~~~~~~~~~~~~~ registerUser ~~~~~~~~~~~~ //
       .addCase(registerUser.pending, () => ({
         ...initialState,
         isCheckingAuth: true
