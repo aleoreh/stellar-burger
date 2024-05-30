@@ -12,12 +12,12 @@ export const ProtectedRoute = ({
   allowOnly,
   children
 }: ProtectedRouteProps) => {
-  const auth = useSelector(authDepot.selectAuth);
+  const isPending = useSelector(authDepot.selectIsPending);
   const isLoggedIn = useSelector(authDepot.isLoggedIn);
 
   const location = useLocation();
 
-  if (auth.isCheckingAuth) {
+  if (isPending) {
     return <Preloader />;
   }
 

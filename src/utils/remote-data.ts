@@ -33,7 +33,7 @@ export const rejected = <T>(error: string): RemoteData<T> => ({
   error
 });
 
-export const isRejected = <T>(value: RemoteData<T>): value is Waiting =>
+export const isRejected = <T>(value: RemoteData<T>): value is Rejected =>
   value.type === 'rejected';
 
 export const fulfilled = <T>(value: T): Fulfilled<T> => ({
@@ -53,5 +53,12 @@ export const remoteData = {
   isRejected,
   fulfilled,
   isFulfilled,
-  getValue: <T>(x: Fulfilled<T>): T => x.value
+  getValue: <T>(x: Fulfilled<T>): T => x.value,
+  getWithDefault: <T>(x: RemoteData<T>, defaultValue: T): T =>
+    isFulfilled(x) ? x.value : defaultValue,
+  getRejected: (x: Rejected): string => x.error,
+  getRejectedWithDefault: <T>(
+    x: RemoteData<T>,
+    defaultError: string | null | undefined
+  ): string | null | undefined => (isRejected(x) ? x.error : defaultError)
 };

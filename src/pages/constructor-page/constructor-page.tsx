@@ -8,12 +8,12 @@ import orderDepot from '../../services/slices/orderSlice';
 import styles from './constructor-page.module.css';
 
 export const ConstructorPage: FC = () => {
-  const isIngredientsLoading = useSelector(ingredientsDepot.selectIsLoading);
-  const constructorItems = useSelector(orderDepot.selectConstructorItems);
+  const isIngredientsLoading = useSelector(ingredientsDepot.selectIsPending);
+  const isOrderSending = useSelector(orderDepot.selectIsOrderSending);
 
   return (
     <>
-      {isIngredientsLoading || constructorItems.sending ? (
+      {isIngredientsLoading || isOrderSending ? (
         <Preloader />
       ) : (
         <main className={clsx('ConstructorPage', styles.containerMain)}>

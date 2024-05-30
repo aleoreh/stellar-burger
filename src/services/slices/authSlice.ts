@@ -9,20 +9,23 @@ import {
 } from '../../utils/burger-api';
 import { deleteCookie, setCookie } from '../../utils/cookie';
 import { TUser } from '../../utils/types';
+import {
+  RemoteData,
+  fulfilled,
+  isWaiting,
+  rejected,
+  remoteData,
+  waiting
+} from '../../utils/remote-data';
 
 // ~~~~~~~~~~~~~~~~ slice ~~~~~~~~~~~~~~~~ //
 
 export interface AuthState {
-  user: TUser | null;
-  // TODO: лучше разделить флаги для каждого асинхронного действия
-  isCheckingAuth: boolean;
-  error: string | null;
+  user: RemoteData<TUser | null>;
 }
 
 const initialState: AuthState = {
-  user: null,
-  isCheckingAuth: false,
-  error: null
+  user: remoteData.notAsked()
 };
 
 export const authSlice = createSlice({
@@ -32,75 +35,58 @@ export const authSlice = createSlice({
     noop: (state) => state
   },
   selectors: {
-    selectAuth: (state) => state,
-    isLoggedIn: (state) => state.user !== null,
-    selectUser: (state) => state.user,
-    selectAsyncState: (state) => ({
-      pending: state.isCheckingAuth,
-      error: state.error
-    })
+    selectIsPending: (state) => isWaiting(state.user),
+    selectError: (state) => remoteData.getRejectedWithDefault(state.user, null),
+    selectUser: (state) => remoteData.getWithDefault(state.user, null),
+    isLoggedIn: (state) => remoteData.getWithDefault(state.user, null) !== null
   },
   extraReducers: (builder) => {
     builder
       // ~~~~~~~~~~~~~~ loginUser ~~~~~~~~~~~~~~ //
-      .addCase(loginUser.pending, () => ({
-        ...initialState,
-        isCheckingAuth: true
-      }))
-      .addCase(loginUser.rejected, (state, action) => ({
-        ...initialState,
-        isCheckingAuth: false,
-        error:
+      .addCase(loginUser.pending, (state) => {
+        state.user = remoteData.waiting();
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.user = remoteData.rejected(
           action.error.message ||
-          'Не удалось отправить запрос на авторизацию. Повторите попытку позже'
-      }))
-      .addCase(loginUser.fulfilled, (state, action) => ({
-        ...state,
-        error: null,
-        user: action.payload.user,
-        isCheckingAuth: false
-      }))
+            'Не удалось отправить запрос на авторизацию. Повторите попытку позже'
+        );
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.user = remoteData.fulfilled(action.payload.user);
+      })
       // ~~~~~~~~~~~~~ registerUser ~~~~~~~~~~~~ //
-      .addCase(registerUser.pending, () => ({
-        ...initialState,
-        isCheckingAuth: true
-      }))
-      .addCase(registerUser.rejected, (state, action) => ({
-        ...initialState,
-        isCheckingAuth: false,
-        error:
+      .addCase(registerUser.pending, (state) => {
+        state.user = waiting();
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.user = rejected(
           action.error.message ||
-          'Не удалось отправить запрос на авторизацию. Повторите попытку позже'
-      }))
-      .addCase(registerUser.fulfilled, (state, action) => ({
-        ...state,
-        error: null,
-        user: action.payload.user,
-        isCheckingAuth: false
-      }))
+            'Не удалось отправить запрос на авторизацию. Повторите попытку позже'
+        );
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.user = fulfilled(action.payload.user);
+      })
       .addCase(updateUser.pending, (state) => {
-        state.isCheckingAuth = true;
+        state.user = waiting();
       })
       .addCase(updateUser.rejected, (state, action) => {
-        state.isCheckingAuth = false;
-        state.error =
+        state.user = rejected(
           action.error.message ||
-          'Не удалось отправить запрос на обновление. Повторите попытку позже';
+            'Не удалось отправить запрос на обновление. Повторите попытку позже'
+        );
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-        state.isCheckingAuth = false;
-        state.error = null;
-        state.user = action.payload.user;
+        state.user = fulfilled(action.payload.user);
       })
       // ~~~~~~~~~~~~~~ logoutUser ~~~~~~~~~~~~~ //
       .addCase(logoutUser.pending, (state) => {
-        state.isCheckingAuth = true;
+        state.user = waiting();
       })
       .addCase(logoutUser.fulfilled, () => initialState)
       .addCase(loginLocally.fulfilled, (state, action) => {
-        state.error = null;
-        state.isCheckingAuth = false;
-        state.user = action.payload;
+        state.user = fulfilled(action.payload);
       });
   }
 });

@@ -1,19 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getIngredientsApi } from '../../utils/burger-api';
 import { TIngredient } from '../../utils/types';
+import { RemoteData, remoteData } from '../../utils/remote-data';
 
 // ~~~~~~~~~~~~~~~~ slice ~~~~~~~~~~~~~~~~ //
 
 export interface IngredientsState {
-  isLoading: boolean;
-  error: string | null;
-  ingredients: TIngredient[];
+  ingredients: RemoteData<TIngredient[]>;
 }
 
 const initialState: IngredientsState = {
-  isLoading: false,
-  error: null,
-  ingredients: []
+  ingredients: remoteData.notAsked()
 };
 
 export const ingredientsSlice = createSlice({
@@ -23,28 +20,24 @@ export const ingredientsSlice = createSlice({
     noop: (state) => state
   },
   selectors: {
-    selectIngredients: (state) => state.ingredients,
-    selectIsLoading: (state) => state.isLoading,
-    selectFetchState: (state) => ({
-      isLoading: state.isLoading,
-      error: state.error,
-      hasError: state.error !== null
-    })
+    selectIsPending: (state) => remoteData.isWaiting(state.ingredients),
+    selectError: (state) =>
+      remoteData.getRejectedWithDefault(state.ingredients, null),
+    selectIngredients: (state) =>
+      remoteData.getWithDefault(state.ingredients, null)
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchIngredients.pending, () => ({
-        ...initialState,
-        isLoading: true
-      }))
+      .addCase(fetchIngredients.pending, (state) => {
+        state.ingredients = remoteData.waiting();
+      })
       .addCase(fetchIngredients.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message || 'Не удалось получить ингредиенты';
+        state.ingredients = remoteData.rejected(
+          action.error.message || 'Не удалось получить ингредиенты'
+        );
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.error = null;
-        state.ingredients = action.payload;
+        state.ingredients = remoteData.fulfilled(action.payload);
       });
   }
 });

@@ -12,7 +12,7 @@ export const IngredientDetails: FC = () => {
     return null;
   }
 
-  const ingredients = useSelector(ingredientsDepot.selectIngredients);
+  const ingredients = useSelector(ingredientsDepot.selectIngredients) || [];
 
   const ingredientData = ingredients.find((x) => x._id === _id);
 

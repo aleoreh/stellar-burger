@@ -1,12 +1,14 @@
-import { FC, SyntheticEvent, useState } from 'react';
 import { LoginUI } from '@ui-pages';
+import { FC, SyntheticEvent, useState } from 'react';
 import { useDispatch, useSelector } from '../../app/store';
-import authDepot, { loginUser } from '../../services/slices/authSlice';
 import { Preloader } from '../../components/ui';
+import authDepot, { loginUser } from '../../services/slices/authSlice';
 
 export const Login: FC = () => {
   const dispatch = useDispatch();
-  const selectAuth = useSelector(authDepot.selectAuth);
+
+  const isPending = useSelector(authDepot.selectIsPending);
+  const error = useSelector(authDepot.selectError);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,13 +18,11 @@ export const Login: FC = () => {
     dispatch(loginUser({ email, password }));
   };
 
-  if (selectAuth.isCheckingAuth) {
-    return <Preloader />;
-  }
-
-  return (
+  return isPending ? (
+    <Preloader />
+  ) : (
     <LoginUI
-      errorText={selectAuth.error || ''}
+      errorText={error || undefined}
       email={email}
       setEmail={setEmail}
       password={password}

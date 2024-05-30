@@ -1,14 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getOrdersApi } from '../../utils/burger-api';
-import {
-  RemoteData,
-  fulfilled,
-  isFulfilled,
-  notAsked,
-  rejected,
-  remoteData,
-  waiting
-} from '../../utils/remote-data';
+import { RemoteData, remoteData } from '../../utils/remote-data';
 import { TOrder } from '../../utils/types';
 
 export interface UserOrdersState {
@@ -16,7 +8,7 @@ export interface UserOrdersState {
 }
 
 const initialState: UserOrdersState = {
-  orders: notAsked()
+  orders: remoteData.notAsked()
 };
 
 export const userOrdersSlice = createSlice({
@@ -27,23 +19,23 @@ export const userOrdersSlice = createSlice({
   },
   selectors: {
     selectIsPending: (state) => remoteData.isWaiting(state.orders),
-    selectIsError: (state) => remoteData.isRejected(state.orders),
-    selectOrdersValue: (state) =>
-      isFulfilled(state.orders) ? remoteData.getValue(state.orders) : []
+    selectError: (state) =>
+      remoteData.getRejectedWithDefault(state.orders, null),
+    selectOrders: (state) => remoteData.getWithDefault(state.orders, null)
   },
   extraReducers: (builder) =>
     builder
       .addCase(getUserOrders.pending, (state) => {
-        state.orders = waiting();
+        state.orders = remoteData.waiting();
       })
       .addCase(getUserOrders.rejected, (state, action) => {
-        state.orders = rejected(
+        state.orders = remoteData.rejected(
           action.error.message ||
             'Не удалось получить заказы пользователся. Повторите попытку позже'
         );
       })
       .addCase(getUserOrders.fulfilled, (state, action) => {
-        state.orders = fulfilled(action.payload);
+        state.orders = remoteData.fulfilled(action.payload);
       })
 });
 

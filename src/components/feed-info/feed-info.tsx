@@ -13,7 +13,7 @@ const getOrders = (orders: TOrder[], status: string): number[] =>
 
 export const FeedInfo: FC = () => {
   const feed = useSelector(feedDepot.selectFeed);
-  const orders = feed.orders;
+  const orders = useSelector(feedDepot.selectOrders) || [];
 
   const readyOrders = getOrders(orders, 'done');
 

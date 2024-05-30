@@ -7,13 +7,11 @@ import feedDepot, { getFeeds } from '../../services/slices/feedSlice';
 export const Feed: FC = () => {
   const dispatch = useDispatch();
 
-  const feed = useSelector(feedDepot.selectFeed);
-  const orders = useSelector(feedDepot.selectOrders);
+  const isPending = useSelector(feedDepot.selectIsPending);
+  const orders = useSelector(feedDepot.selectOrders) || [];
 
-  return feed.pending ? (
+  return isPending ? (
     <Preloader />
-  ) : feed.error ? (
-    <div>{feed.error}</div>
   ) : (
     <FeedUI
       orders={orders}

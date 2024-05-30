@@ -11,10 +11,10 @@ export const OrderInfo: FC = () => {
   const { number } = useParams<{ number: string }>();
   if (number === undefined || isNaN(parseInt(number))) return null;
 
-  const orders = useSelector(feedDepot.selectOrders);
+  const orders = useSelector(feedDepot.selectOrders) || [];
   const orderData = feedDepot.getOrderByNumber(orders, parseInt(number));
 
-  const ingredients = useSelector(ingredientsDepot.selectIngredients);
+  const ingredients = useSelector(ingredientsDepot.selectIngredients) || [];
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {

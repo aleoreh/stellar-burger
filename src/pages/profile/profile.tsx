@@ -1,8 +1,8 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '../../app/store';
-import authDepot, { updateUser } from '../../services/slices/authSlice';
 import { Preloader } from '../../components/ui';
+import authDepot, { updateUser } from '../../services/slices/authSlice';
 
 export const Profile: FC = () => {
   const dispatch = useDispatch();
@@ -10,7 +10,8 @@ export const Profile: FC = () => {
   const user = useSelector(authDepot.selectUser);
   if (user === null) return null;
 
-  const asyncState = useSelector(authDepot.selectAsyncState);
+  const isPending = useSelector(authDepot.selectIsPending);
+  const error = useSelector(authDepot.selectError);
 
   const [formValue, setFormValue] = useState({
     name: user.name,
@@ -52,7 +53,7 @@ export const Profile: FC = () => {
     }));
   };
 
-  return asyncState.pending ? (
+  return isPending ? (
     <Preloader />
   ) : (
     <ProfileUI
@@ -61,7 +62,7 @@ export const Profile: FC = () => {
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
       handleInputChange={handleInputChange}
-      updateUserError={asyncState.error || undefined}
+      updateUserError={error || undefined}
     />
   );
 

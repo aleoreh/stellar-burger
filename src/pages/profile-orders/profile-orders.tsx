@@ -7,7 +7,7 @@ import userOrdersDepot from '../../services/slices/userOrdersSlice';
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 export const ProfileOrders: FC = () => {
-  const orders = useSelector(userOrdersDepot.selectOrdersValue);
+  const orders = useSelector(userOrdersDepot.selectOrders) || [];
   const isPending = useSelector(userOrdersDepot.selectIsPending);
 
   return isPending ? <Preloader /> : <ProfileOrdersUI orders={orders} />;

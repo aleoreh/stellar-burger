@@ -1,28 +1,18 @@
-import {
-  createAsyncThunk,
-  createSelector,
-  createSlice
-} from '@reduxjs/toolkit';
-import { TOrder } from '../../utils/types';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getFeedsApi } from '../../utils/burger-api';
-
-const selectOrder = (state: FeedState) => (_id: string) =>
-  state.orders.find((x) => x._id === _id);
+import { RemoteData, remoteData } from '../../utils/remote-data';
+import { TOrder } from '../../utils/types';
 
 export interface FeedState {
-  orders: TOrder[];
+  orders: RemoteData<TOrder[]>;
   total: number | undefined;
   totalToday: number | undefined;
-  pending: boolean;
-  error: string | null;
 }
 
 const initialState: FeedState = {
-  orders: [],
+  orders: remoteData.notAsked(),
   total: undefined,
-  totalToday: undefined,
-  pending: false,
-  error: null
+  totalToday: undefined
 };
 
 export const feedSlice = createSlice({
@@ -32,27 +22,35 @@ export const feedSlice = createSlice({
     noop: (x) => x
   },
   selectors: {
-    selectFeed: (state) => state,
-    selectOrders: (state) => state.orders
+    selectIsPending: (state) => remoteData.isWaiting(state.orders),
+    selectError: (state) =>
+      remoteData.getRejectedWithDefault(state.orders, null),
+    selectOrders: (state) => remoteData.getWithDefault(state.orders, null),
+    selectFeed: (state) =>
+      remoteData.isFulfilled(state.orders)
+        ? { ...state.orders, orders: remoteData.getValue(state.orders) }
+        : { orders: [], total: undefined, totalToday: undefined }
   },
   extraReducers: (builder) =>
     builder
       .addCase(getFeeds.pending, (state) => {
-        state.error = null;
-        state.pending = true;
+        state.orders = remoteData.waiting();
+        state.total = undefined;
+        state.totalToday = undefined;
       })
       .addCase(getFeeds.rejected, (state, action) => {
-        state.pending = false;
-        state.error =
+        state.orders = remoteData.rejected(
           action.error.message ||
-          'Не удалось получить список заказов. Попробуйте получить его позже';
+            'Не удалось получить список заказов. Попробуйте получить его позже'
+        );
+        state.total = undefined;
+        state.totalToday = undefined;
       })
-      .addCase(getFeeds.fulfilled, (state, action) => ({
-        ...state,
-        pending: false,
-        error: null,
-        ...action.payload
-      }))
+      .addCase(getFeeds.fulfilled, (state, action) => {
+        state.orders = remoteData.fulfilled(action.payload.orders);
+        state.total = action.payload.total;
+        state.totalToday = action.payload.totalToday;
+      })
 });
 
 // ~~~~~~~~~~~~~~~~ async ~~~~~~~~~~~~~~~~ //
@@ -61,10 +59,8 @@ export const getFeeds = createAsyncThunk('feed/getFeeds', getFeedsApi);
 
 // ~~~~~~~~~~~~~~~ helpers ~~~~~~~~~~~~~~~ //
 
-export const getFeedOrderByNumber = (
-  orders: FeedState['orders'],
-  number: TOrder['number']
-) => orders.find((x) => x.number === number);
+export const getFeedOrderByNumber = (orders: TOrder[], number: number) =>
+  orders.find((x) => x.number === number);
 
 // ~~~~~~~~~~~~~~~ exports ~~~~~~~~~~~~~~~ //
 

@@ -1,12 +1,14 @@
 import { RegisterUI } from '@ui-pages';
 import { FC, SyntheticEvent, useState } from 'react';
 import { useDispatch, useSelector } from '../../app/store';
-import authDepot, { registerUser } from '../../services/slices/authSlice';
 import { Preloader } from '../../components/ui';
+import authDepot, { registerUser } from '../../services/slices/authSlice';
 
 export const Register: FC = () => {
   const dispatch = useDispatch();
-  const selectAuth = useSelector(authDepot.selectAuth);
+
+  const isPending = useSelector(authDepot.selectIsPending);
+  const error = useSelector(authDepot.selectError) || undefined;
 
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
@@ -17,13 +19,11 @@ export const Register: FC = () => {
     dispatch(registerUser({ name: userName, email, password }));
   };
 
-  if (selectAuth.isCheckingAuth) {
-    return <Preloader />;
-  }
-
-  return (
+  return isPending ? (
+    <Preloader />
+  ) : (
     <RegisterUI
-      errorText={selectAuth.error || ''}
+      errorText={error}
       email={email}
       userName={userName}
       password={password}

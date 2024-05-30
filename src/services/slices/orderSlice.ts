@@ -1,6 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TIngredient, TOrder } from '../../utils/types';
 import { orderBurgerApi } from '../../utils/burger-api';
+import { RemoteData, remoteData } from '../../utils/remote-data';
 
 // ~~~~~~~~~~~~~~~ helpers ~~~~~~~~~~~~~~~ //
 
@@ -26,17 +27,13 @@ const moveInPlace = (
 export interface OrderState {
   bun: TIngredient | undefined;
   ingredients: TConstructorIngredient[];
-  sending: boolean;
-  sendingError: string | null;
-  newOrder: TOrder | null;
+  sendingOrder: RemoteData<TOrder>;
 }
 
 const initialState: OrderState = {
   bun: undefined,
   ingredients: [],
-  sending: false,
-  sendingError: null,
-  newOrder: null
+  sendingOrder: remoteData.notAsked()
 };
 
 export const orderSlice = createSlice({
@@ -76,6 +73,11 @@ export const orderSlice = createSlice({
     }
   },
   selectors: {
+    selectIsOrderSending: (state) => remoteData.isWaiting(state.sendingOrder),
+    selectOrderSengingError: (state) =>
+      remoteData.getRejectedWithDefault(state.sendingOrder, null),
+    selectSendingOrder: (state) =>
+      remoteData.getWithDefault(state.sendingOrder, null),
     selectConstructorItems: (state) => state,
     selectIds: (state): Array<TConstructorIngredient['_id']> =>
       [
@@ -83,24 +85,21 @@ export const orderSlice = createSlice({
         ...state.ingredients.map((x) => x._id),
         state.bun?._id || ''
       ].filter((x) => x !== ''),
-    selectIsReady: (state) =>
-      state.bun !== null && state.ingredients.length > 0,
-    selectNewOrder: (state) => state.newOrder
+    selectIsReady: (state) => state.bun !== null && state.ingredients.length > 0
   },
   extraReducers: (builder) =>
     builder
       .addCase(orderBurger.pending, (state) => {
-        state.sending = true;
+        state.sendingOrder = remoteData.waiting();
       })
       .addCase(orderBurger.rejected, (state, action) => {
-        (state.sending = false),
-          (state.sendingError =
-            'Не удалось отправить заказ. Повторите попытку позже');
+        state.sendingOrder = remoteData.rejected(
+          action.error.message ||
+            'Не удалось отправить заказ. Повторите попытку позже'
+        );
       })
       .addCase(orderBurger.fulfilled, (state, action) => {
-        state.sending = false;
-        state.sendingError = null;
-        state.newOrder = action.payload.order;
+        state.sendingOrder = remoteData.fulfilled(action.payload.order);
       })
 });
 

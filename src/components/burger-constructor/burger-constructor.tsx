@@ -15,17 +15,17 @@ export const BurgerConstructor: FC = () => {
   const constructorItems = useSelector(orderDepot.selectConstructorItems);
   const ids = useSelector(orderDepot.selectIds);
   const isReady = useSelector(orderDepot.selectIsReady);
-  const newOrder = useSelector(orderDepot.selectNewOrder);
+  const sendingOrder = useSelector(orderDepot.selectSendingOrder);
 
   useEffect(() => {
-    if (!newOrder) return;
+    if (!sendingOrder) return;
 
     dispatch(feedDepot.getFeeds());
-  }, [newOrder]);
+  }, [sendingOrder]);
 
   const orderRequest = false;
 
-  const orderModalData = constructorItems.newOrder;
+  const orderModalData = sendingOrder;
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
