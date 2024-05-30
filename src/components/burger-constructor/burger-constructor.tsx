@@ -13,6 +13,8 @@ export const BurgerConstructor: FC = () => {
 
   const isLoggedIn = useSelector(authDepot.isLoggedIn);
   const constructorItems = useSelector(orderDepot.selectConstructorItems);
+  const bun = useSelector(orderDepot.selectBun);
+  const ingredients = useSelector(orderDepot.selectIngredients);
   const ids = useSelector(orderDepot.selectIds);
   const isReady = useSelector(orderDepot.selectIsReady);
   const sendingOrder = useSelector(orderDepot.selectSendingOrder);
@@ -28,7 +30,7 @@ export const BurgerConstructor: FC = () => {
   const orderModalData = sendingOrder;
 
   const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest) return;
+    if (!bun || orderRequest) return;
     if (!isLoggedIn) {
       navigate('/login');
       return;
@@ -43,8 +45,8 @@ export const BurgerConstructor: FC = () => {
 
   const price = useMemo(
     () =>
-      (constructorItems.bun ? constructorItems.bun.price * 2 : 0) +
-      constructorItems.ingredients.reduce(
+      (bun ? bun.price * 2 : 0) +
+      ingredients.reduce(
         (s: number, v: TConstructorIngredient) => s + v.price,
         0
       ),

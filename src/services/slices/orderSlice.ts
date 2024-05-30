@@ -72,6 +72,8 @@ export const orderSlice = createSlice({
     }
   },
   selectors: {
+    selectBun: (state) => state.bun,
+    selectIngredients: (state) => state.ingredients,
     selectIsOrderSending: (state) => remoteData.isWaiting(state.sendingOrder),
     selectOrderSengingError: (state) =>
       remoteData.getRejectedWithDefault(state.sendingOrder, null),
