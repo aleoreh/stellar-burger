@@ -9,13 +9,17 @@ import { OrderInfoUI } from '../ui/order-info';
 import { Preloader } from '../ui/preloader';
 
 export const OrderInfo: FC = () => {
-  const { number } = useParams<{ number: string }>();
-  if (number === undefined || isNaN(parseInt(number))) return null;
-
-  const orders = useSelector(userOrdersDepot.selectOrders) || [];
-  const orderData = feedDepot.getOrderByNumber(orders, parseInt(number));
+  const { number: numberStr } = useParams<{ number: string }>();
+  const number = numberStr === undefined ? undefined : parseInt(numberStr);
+  if (number === undefined || isNaN(number)) return null;
 
   const ingredients = useSelector(ingredientsDepot.selectIngredients) || [];
+
+  const userOrders = useSelector(userOrdersDepot.selectOrders) || [];
+  const feedOrders = useSelector(feedDepot.selectOrders) || [];
+  const orderData =
+    feedDepot.getOrderByNumber(userOrders, number) ||
+    feedDepot.getOrderByNumber(feedOrders, number);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
