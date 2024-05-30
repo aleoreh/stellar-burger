@@ -5,6 +5,10 @@ import { RemoteData, remoteData } from '../../utils/remote-data';
 
 // ~~~~~~~~~~~~~~~ helpers ~~~~~~~~~~~~~~~ //
 
+/**
+ * Генерирует идентификатор в виде натурального числа,
+ * следующего за самым большим идентификатором
+ */
 const generateId = (ingredients: TConstructorIngredient[]): string => {
   if (ingredients.length === 0) return '1';
 
@@ -13,6 +17,11 @@ const generateId = (ingredients: TConstructorIngredient[]): string => {
   return String(parseInt(maxId) + 1);
 };
 
+/**
+ * Перемещает элемент массива на заданное количество позиций
+ *
+ * Осторожно, изменяет переданный массив!
+ */
 const moveInPlace = (
   arr: Array<unknown>,
   srcIndex: number,
