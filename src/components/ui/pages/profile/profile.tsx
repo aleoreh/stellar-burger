@@ -92,7 +92,10 @@ export const ProfileUI: FC<ProfileUIProps> = ({
                 type='secondary'
                 htmlType='button'
                 size='medium'
-                onClick={handleCancel}
+                onClick={(evt) => {
+                  resetInputsErrors();
+                  handleCancel(evt);
+                }}
               >
                 Отменить
               </Button>
