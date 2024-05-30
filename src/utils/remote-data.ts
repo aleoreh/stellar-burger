@@ -16,6 +16,14 @@ type Fulfilled<T> = {
   value: T;
 };
 
+/**
+ * Использование нескольких полей для описания процесса
+ * initial -> pending -> rejected/fulfilled может приводить
+ * к противоречивым состояниям, таким как:
+ * { pending: true, error: someError } или { error: someError, data: someData }
+ * Для регулирования таких ситуаций используем этот паттерн,
+ * который не допускает противоречивых состояний
+ */
 export type RemoteData<T> = NotAsked | Waiting | Rejected | Fulfilled<T>;
 
 export const notAsked = <T>(): RemoteData<T> => ({ type: 'notAsked' });
