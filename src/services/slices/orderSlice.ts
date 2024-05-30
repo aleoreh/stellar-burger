@@ -6,18 +6,6 @@ import { RemoteData, remoteData } from '../../utils/remote-data';
 // ~~~~~~~~~~~~~~~ helpers ~~~~~~~~~~~~~~~ //
 
 /**
- * Генерирует идентификатор в виде натурального числа,
- * следующего за самым большим идентификатором
- */
-const generateId = (ingredients: TConstructorIngredient[]): string => {
-  if (ingredients.length === 0) return '1';
-
-  const maxId = [...ingredients].sort((x, y) => (x.id > y.id ? -1 : 1))[0].id;
-
-  return String(parseInt(maxId) + 1);
-};
-
-/**
  * Перемещает элемент массива на заданное количество позиций
  *
  * Осторожно, изменяет переданный массив!
@@ -34,12 +22,14 @@ const moveInPlace = (
 // ~~~~~~~~~~~~~~~~ slice ~~~~~~~~~~~~~~~~ //
 
 export interface OrderState {
+  _id: string;
   bun: TIngredient | undefined;
   ingredients: TConstructorIngredient[];
   sendingOrder: RemoteData<TOrder>;
 }
 
 const initialState: OrderState = {
+  _id: '1',
   bun: undefined,
   ingredients: [],
   sendingOrder: remoteData.notAsked()
@@ -53,10 +43,12 @@ export const orderSlice = createSlice({
       state.bun = action.payload;
     },
     addIngredient: (state, action: PayloadAction<TIngredient>) => {
+      const newId = String(parseInt(state._id) + 1);
       state.ingredients = [
         ...state.ingredients,
-        { ...action.payload, id: generateId(state.ingredients) }
+        { ...action.payload, id: newId }
       ];
+      state._id = newId;
     },
     deleteIngredient: (
       state,
