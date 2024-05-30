@@ -55,6 +55,18 @@ export const fulfilled = <T>(value: T): Fulfilled<T> => ({
 export const isFulfilled = <T>(value: RemoteData<T>): value is Fulfilled<T> =>
   value.type === 'fulfilled';
 
+export const getValue = <T>(x: Fulfilled<T>): T => x.value;
+
+export const getWithDefault = <T>(x: RemoteData<T>, defaultValue: T): T =>
+  isFulfilled(x) ? x.value : defaultValue;
+
+export const getRejected = (x: Rejected): string => x.error;
+
+export const getRejectedWithDefault = <T>(
+  x: RemoteData<T>,
+  defaultError: string | null | undefined
+): string | null | undefined => (isRejected(x) ? x.error : defaultError);
+
 export const remoteData = {
   notAsked,
   isNotAsked,
@@ -64,12 +76,8 @@ export const remoteData = {
   isRejected,
   fulfilled,
   isFulfilled,
-  getValue: <T>(x: Fulfilled<T>): T => x.value,
-  getWithDefault: <T>(x: RemoteData<T>, defaultValue: T): T =>
-    isFulfilled(x) ? x.value : defaultValue,
-  getRejected: (x: Rejected): string => x.error,
-  getRejectedWithDefault: <T>(
-    x: RemoteData<T>,
-    defaultError: string | null | undefined
-  ): string | null | undefined => (isRejected(x) ? x.error : defaultError)
+  getValue,
+  getWithDefault,
+  getRejected,
+  getRejectedWithDefault
 };
