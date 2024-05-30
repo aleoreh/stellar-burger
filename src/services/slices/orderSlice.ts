@@ -83,7 +83,9 @@ export const orderSlice = createSlice({
         ...state.ingredients.map((x) => x._id),
         state.bun?._id || ''
       ].filter((x) => x !== ''),
-    selectIsReady: (state) => state.bun !== null && state.ingredients.length > 0
+    selectIsReady: (state) =>
+      state.bun !== null && state.ingredients.length > 0,
+    selectNewOrder: (state) => state.newOrder
   },
   extraReducers: (builder) =>
     builder
