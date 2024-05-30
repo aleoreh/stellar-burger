@@ -96,11 +96,23 @@ export const authSlice = createSlice({
       .addCase(logoutUser.pending, (state) => {
         state.isCheckingAuth = true;
       })
-      .addCase(logoutUser.fulfilled, () => initialState);
+      .addCase(logoutUser.fulfilled, () => initialState)
+      .addCase(loginLocally.fulfilled, (state, action) => {
+        state.error = null;
+        state.isCheckingAuth = false;
+        state.user = action.payload;
+      });
   }
 });
 
 // ~~~~~~~~~~~~~~~~ async ~~~~~~~~~~~~~~~~ //
+
+export const loginLocally = createAsyncThunk('auth/loginLocally', () => {
+  const localStorageToken = localStorage.getItem('refreshToken');
+  const localStorageUser = localStorage.getItem('user');
+  const user = localStorageUser && JSON.parse(localStorageUser);
+  return user && localStorageToken ? user : null;
+});
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
@@ -109,6 +121,7 @@ export const loginUser = createAsyncThunk(
       .then((res) => {
         setCookie('accessToken', res.accessToken);
         localStorage.setItem('refreshToken', res.refreshToken);
+        localStorage.setItem('user', JSON.stringify(res.user));
         return res;
       })
       .catch((err) => {
@@ -123,6 +136,7 @@ export const registerUser = createAsyncThunk(
       .then((res) => {
         setCookie('accessToken', res.accessToken);
         localStorage.setItem('refreshToken', res.refreshToken);
+        localStorage.setItem('user', JSON.stringify(res.user));
         return res;
       })
       .catch((err) => {
@@ -136,6 +150,7 @@ export const logoutUser = createAsyncThunk('auth/logoutUser', () =>
   logoutApi().then(() => {
     deleteCookie('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
   })
 );
 

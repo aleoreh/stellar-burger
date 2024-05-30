@@ -24,6 +24,7 @@ import { getFeeds } from '../../services/slices/feedSlice';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import styles from './app.module.css';
+import { loginLocally } from '../../services/slices/authSlice';
 
 const App = () => {
   const location = useLocation();
@@ -32,6 +33,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(loginLocally());
     dispatch(getFeeds());
     dispatch(fetchIngredients());
   }, []);
