@@ -1,10 +1,10 @@
-import { TIngredient } from '@utils-types';
-import { FC, useMemo } from 'react';
+import { TIngredient, TOrder } from '@utils-types';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from '../../app/store';
 import feedDepot from '../../services/slices/feedSlice';
 import ingredientsDepot from '../../services/slices/ingredientsSlice';
-import userOrdersDepot from '../../services/slices/userOrdersSlice';
+import { getOrderByNumberApi } from '../../utils/burger-api';
 import { OrderInfoUI } from '../ui/order-info';
 import { Preloader } from '../ui/preloader';
 
@@ -13,13 +13,9 @@ export const OrderInfo: FC = () => {
   const number = numberStr === undefined ? undefined : parseInt(numberStr);
   if (number === undefined || isNaN(number)) return null;
 
-  const ingredients = useSelector(ingredientsDepot.selectIngredients) || [];
+  const [orderData, setOrderData] = useState<TOrder | undefined>(undefined);
 
-  const userOrders = useSelector(userOrdersDepot.selectOrders) || [];
-  const feedOrders = useSelector(feedDepot.selectOrders) || [];
-  const orderData =
-    feedDepot.getOrderByNumber(userOrders, number) ||
-    feedDepot.getOrderByNumber(feedOrders, number);
+  const ingredients = useSelector(ingredientsDepot.selectIngredients) || [];
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -62,6 +58,14 @@ export const OrderInfo: FC = () => {
       total
     };
   }, [orderData, ingredients]);
+
+  useEffect(() => {
+    if (orderData && orderData.number === number) return;
+
+    getOrderByNumberApi(number).then((res) => {
+      setOrderData(feedDepot.getOrderByNumber(res.orders, number));
+    });
+  }, [orderData]);
 
   if (!orderInfo) {
     return <Preloader />;
