@@ -21,7 +21,10 @@ export const BurgerConstructor: FC = () => {
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
-    if (!isLoggedIn) navigate('/login');
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
 
     dispatch(orderBurger(ids));
   };
