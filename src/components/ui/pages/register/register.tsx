@@ -62,7 +62,7 @@ export const RegisterUI: FC<RegisterUIProps> = ({
           <>
             <div className='pb-6'>
               <Input
-                {...inputs.nameInput}
+                {...inputs.nameInput.attributes}
                 type='text'
                 placeholder='Имя'
                 size='default'
@@ -70,14 +70,14 @@ export const RegisterUI: FC<RegisterUIProps> = ({
             </div>
             <div className='pb-6'>
               <Input
-                {...inputs.emailInput}
+                {...inputs.emailInput.attributes}
                 type='email'
                 placeholder='E-mail'
                 size={'default'}
               />
             </div>
             <div className='pb-6'>
-              <PasswordInput {...inputs.passwordInput} />
+              <PasswordInput {...inputs.passwordInput.attributes} />
             </div>
             <div className={`pb-6 ${styles.button}`}>
               <Button

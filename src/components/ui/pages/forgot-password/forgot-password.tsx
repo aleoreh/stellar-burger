@@ -37,7 +37,7 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
         >
           <div className='pb-6'>
             <Input
-              {...inputs.emailInput}
+              {...inputs.emailInput.attributes}
               type='email'
               placeholder='Укажите e-mail'
               size='default'

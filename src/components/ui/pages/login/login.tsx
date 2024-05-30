@@ -48,14 +48,14 @@ export const LoginUI: FC<LoginUIProps> = ({
           <>
             <div className='pb-6'>
               <Input
-                {...inputs.emailInput}
+                {...inputs.emailInput.attributes}
                 type='email'
                 placeholder='E-mail'
                 size='default'
               />
             </div>
             <div className='pb-6'>
-              <PasswordInput {...inputs.passwordInput} />
+              <PasswordInput {...inputs.passwordInput.attributes} />
             </div>
             <div className={`pb-6 ${styles.button}`}>
               <Button

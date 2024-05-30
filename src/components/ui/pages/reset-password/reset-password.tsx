@@ -41,7 +41,10 @@ export const ResetPasswordUI: FC<ResetPasswordUIProps> = ({
           onSubmit={handleSubmit}
         >
           <div className='pb-6'>
-            <PasswordInput {...inputs.passwordInput} name='password' />
+            <PasswordInput
+              {...inputs.passwordInput.attributes}
+              name='password'
+            />
           </div>
           <div className='pb-6'>
             <Input

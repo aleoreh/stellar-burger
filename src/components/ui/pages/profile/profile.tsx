@@ -43,7 +43,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
     handleInputChange
   );
 
-  const { inputs, isValid } = useFormValidation({
+  const { inputs, isValid, resetInputsErrors } = useFormValidation({
     name: nameInput,
     email: emailInput,
     password: passwordInput
@@ -61,7 +61,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
         <>
           <div className='pb-6'>
             <Input
-              {...inputs.name}
+              {...inputs.name.attributes}
               type={'text'}
               placeholder={'Имя'}
               size={'default'}
@@ -70,7 +70,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
           </div>
           <div className='pb-6'>
             <Input
-              {...inputs.email}
+              {...inputs.email.attributes}
               type={'email'}
               placeholder={'E-mail'}
               size={'default'}
@@ -79,7 +79,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
           </div>
           <div className='pb-6'>
             <Input
-              {...inputs.password}
+              {...inputs.password.attributes}
               type={'password'}
               placeholder={'Пароль'}
               size={'default'}

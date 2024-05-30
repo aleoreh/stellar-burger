@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 
 type ValidatedField<N> = {
-  name: N;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  error: boolean;
-  errorText: string;
-  'data-initial': boolean;
+  attributes: {
+    name: N;
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    error: boolean;
+    errorText: string;
+    'data-initial': boolean;
+  };
+  resetError: () => void;
 };
 
 type Validate = (value: string) => boolean;
@@ -47,6 +50,9 @@ export const useValidatedField = <N extends string>(
   validator: Validator,
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 ): ValidatedField<N> => {
+  const [isInitial, setIsInitial] = useState(true);
+  const [error, setError] = useState<string | undefined>(undefined);
+
   useEffect(() => {
     if (isInitial) {
       setIsInitial(false);
@@ -60,19 +66,23 @@ export const useValidatedField = <N extends string>(
     setIsInitial(false);
   }, [value]);
 
-  const [isInitial, setIsInitial] = useState(true);
-  const [error, setError] = useState<string | undefined>(undefined);
   return {
-    name,
-    value,
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-      setIsInitial(false);
-      setValue(e.target.value);
-      onChange?.(e);
+    attributes: {
+      name,
+      value,
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+        setIsInitial(false);
+        setValue(e.target.value);
+        onChange?.(e);
+      },
+      error: error !== undefined,
+      errorText: error || '',
+      'data-initial': isInitial
     },
-    error: error !== undefined,
-    errorText: error || '',
-    'data-initial': isInitial
+    resetError: () => {
+      setIsInitial(true);
+      setError(undefined);
+    }
   };
 };
 
@@ -99,8 +109,8 @@ export const useValidatedField = <N extends string>(
     password: passwordInput
   });
   <form>
-    <Input {...inputs.name} />
-    <Input {...inputs.password} />
+    <Input {...inputs.name.attributes} />
+    <Input {...inputs.password.attributes} />
     <Button disabled={!isValid}>Отправить</Button>
   </form>
  * ```
@@ -114,11 +124,22 @@ export const useFormValidation = <
 }) => {
   let isValid = true;
   for (const key of Object.keys(inputs) as K[]) {
-    isValid = isValid && !inputs[key]['data-initial'] && !inputs[key].error;
+    isValid =
+      isValid &&
+      !inputs[key].attributes['data-initial'] &&
+      !inputs[key].attributes.error;
   }
+
+  const resetInputsErrors = () => {
+    for (const key of Object.keys(inputs) as K[]) {
+      inputs[key].resetError();
+    }
+  };
+
   return {
     inputs,
-    isValid
+    isValid,
+    resetInputsErrors
   };
 };
 
