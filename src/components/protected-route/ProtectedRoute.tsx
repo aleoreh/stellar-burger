@@ -13,7 +13,7 @@ export const ProtectedRoute = ({
   children
 }: ProtectedRouteProps) => {
   const isPending = useSelector(authDepot.selectIsPending);
-  const isLoggedIn = useSelector(authDepot.isLoggedIn);
+  const isLoggedIn = useSelector(authDepot.selectIsLoggedIn);
 
   const location = useLocation();
 

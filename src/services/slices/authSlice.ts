@@ -36,7 +36,8 @@ export const authSlice = createSlice({
     selectIsPending: (state) => isWaiting(state.user),
     selectError: (state) => remoteData.getRejectedWithDefault(state.user, null),
     selectUser: (state) => remoteData.getWithDefault(state.user, null),
-    isLoggedIn: (state) => remoteData.getWithDefault(state.user, null) !== null
+    selectIsLoggedIn: (state) =>
+      remoteData.getWithDefault(state.user, null) !== null
   },
   extraReducers: (builder) => {
     builder

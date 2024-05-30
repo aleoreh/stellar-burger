@@ -11,7 +11,7 @@ export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const isLoggedIn = useSelector(authDepot.isLoggedIn);
+  const isLoggedIn = useSelector(authDepot.selectIsLoggedIn);
   const constructorItems = useSelector(orderDepot.selectConstructorItems);
   const bun = useSelector(orderDepot.selectBun);
   const ingredients = useSelector(orderDepot.selectIngredients);
