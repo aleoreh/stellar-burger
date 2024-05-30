@@ -16,9 +16,7 @@ const initialState: IngredientsState = {
 export const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
-  reducers: {
-    noop: (state) => state
-  },
+  reducers: {},
   selectors: {
     selectIsPending: (state) => remoteData.isWaiting(state.ingredients),
     selectError: (state) =>

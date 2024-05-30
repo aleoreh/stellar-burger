@@ -31,9 +31,7 @@ const initialState: AuthState = {
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {
-    noop: (state) => state
-  },
+  reducers: {},
   selectors: {
     selectIsPending: (state) => isWaiting(state.user),
     selectError: (state) => remoteData.getRejectedWithDefault(state.user, null),

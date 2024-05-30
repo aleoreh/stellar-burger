@@ -40,7 +40,6 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    noop: (state) => state,
     putBun: (state, action: PayloadAction<TIngredient>) => {
       state.bun = action.payload;
     },

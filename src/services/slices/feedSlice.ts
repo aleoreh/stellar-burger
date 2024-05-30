@@ -18,9 +18,7 @@ const initialState: FeedState = {
 export const feedSlice = createSlice({
   name: 'feed',
   initialState,
-  reducers: {
-    noop: (x) => x
-  },
+  reducers: {},
   selectors: {
     selectIsPending: (state) => remoteData.isWaiting(state.orders),
     selectError: (state) =>

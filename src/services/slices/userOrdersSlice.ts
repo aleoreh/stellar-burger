@@ -14,9 +14,7 @@ const initialState: UserOrdersState = {
 export const userOrdersSlice = createSlice({
   name: 'userOrders',
   initialState,
-  reducers: {
-    noop: (state) => state
-  },
+  reducers: {},
   selectors: {
     selectIsPending: (state) => remoteData.isWaiting(state.orders),
     selectError: (state) =>
