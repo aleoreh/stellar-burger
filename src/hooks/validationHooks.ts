@@ -76,6 +76,35 @@ export const useValidatedField = <N extends string>(
   };
 };
 
+/**
+ * 1. Создать поля валидации (useValidatedField)
+ * 2. Подключить их в хук useFormValidation
+ * 3. Применить к `form` и `input`
+ *
+ * ```typescript
+  const nameInput = useValidatedField(
+    'name',
+    name,
+    setName,
+    validators.nonEmptyString
+  );
+  const passwordInput = useValidatedField(
+    'password',
+    password,
+    setPassword,
+    validators.password
+  );
+  const { inputs, isValid } = useFormValidation({
+    name: nameInput,
+    password: passwordInput
+  });
+  <form>
+    <Input {...inputs.name} />
+    <Input {...inputs.password} />
+    <Button disabled={!isValid}>Отправить</Button>
+  </form>
+ * ```
+ */
 export const useFormValidation = <
   T extends {},
   K extends keyof T,
