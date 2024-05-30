@@ -29,18 +29,10 @@ const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const user = useSelector(authDepot.selectUser);
-
   useEffect(() => {
     dispatch(loginLocally());
     dispatch(fetchIngredients());
   }, []);
-
-  useEffect(() => {
-    if (!user) return;
-
-    dispatch(userOrdersDepot.getUserOrders());
-  }, [user]);
 
   return (
     <div className={styles.app}>
