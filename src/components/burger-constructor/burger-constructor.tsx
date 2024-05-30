@@ -1,4 +1,4 @@
-import { BurgerConstructorUI, Preloader } from '@ui';
+import { BurgerConstructorUI } from '@ui';
 import { TConstructorIngredient } from '@utils-types';
 import { FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -43,11 +43,7 @@ export const BurgerConstructor: FC = () => {
     [constructorItems]
   );
 
-  return constructorItems.sending ? (
-    <Preloader />
-  ) : constructorItems.sendingError !== null ? (
-    <div>{constructorItems.sendingError}</div>
-  ) : (
+  return (
     <BurgerConstructorUI
       price={price}
       orderRequest={orderRequest}

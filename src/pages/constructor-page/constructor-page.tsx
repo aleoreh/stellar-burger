@@ -4,14 +4,16 @@ import { useSelector } from 'react-redux';
 import { BurgerConstructor, BurgerIngredients } from '../../components';
 import { Preloader } from '../../components/ui';
 import ingredientsDepot from '../../services/slices/ingredientsSlice';
+import orderDepot from '../../services/slices/orderSlice';
 import styles from './constructor-page.module.css';
 
 export const ConstructorPage: FC = () => {
   const isIngredientsLoading = useSelector(ingredientsDepot.selectIsLoading);
+  const constructorItems = useSelector(orderDepot.selectConstructorItems);
 
   return (
     <>
-      {isIngredientsLoading ? (
+      {isIngredientsLoading || constructorItems.sending ? (
         <Preloader />
       ) : (
         <main className={clsx('ConstructorPage', styles.containerMain)}>
