@@ -130,6 +130,8 @@ const App = () => {
         />
 
         <Route path='*' element={<NotFound404 />} />
+
+        <Route path='/ingredients/:_id' element={<IngredientDetails />} />
       </Routes>
 
       {backgroundLocation && (
