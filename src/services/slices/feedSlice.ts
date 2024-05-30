@@ -72,7 +72,8 @@ export const feedDepot = {
   reducer: feedSlice.reducer,
   ...feedSlice.actions,
   ...feedSlice.selectors,
-  getOrderByNumber: getFeedOrderByNumber
+  getOrderByNumber: getFeedOrderByNumber,
+  getFeeds
 };
 
 export default feedDepot;
