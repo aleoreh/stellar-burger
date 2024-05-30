@@ -1,10 +1,11 @@
 import { BurgerConstructorUI } from '@ui';
 import { TConstructorIngredient } from '@utils-types';
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../app/store';
 import authDepot from '../../services/slices/authSlice';
 import orderDepot, { orderBurger } from '../../services/slices/orderSlice';
+import feedDepot from '../../services/slices/feedSlice';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
@@ -14,6 +15,13 @@ export const BurgerConstructor: FC = () => {
   const constructorItems = useSelector(orderDepot.selectConstructorItems);
   const ids = useSelector(orderDepot.selectIds);
   const isReady = useSelector(orderDepot.selectIsReady);
+  const newOrder = useSelector(orderDepot.selectNewOrder);
+
+  useEffect(() => {
+    if (!newOrder) return;
+
+    dispatch(feedDepot.getFeeds());
+  }, [newOrder]);
 
   const orderRequest = false;
 

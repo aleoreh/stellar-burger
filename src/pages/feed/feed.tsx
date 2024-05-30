@@ -8,6 +8,7 @@ export const Feed: FC = () => {
   const dispatch = useDispatch();
 
   const feed = useSelector(feedDepot.selectFeed);
+  const orders = useSelector(feedDepot.selectOrders);
 
   return feed.pending ? (
     <Preloader />
@@ -15,7 +16,7 @@ export const Feed: FC = () => {
     <div>{feed.error}</div>
   ) : (
     <FeedUI
-      orders={feed.orders}
+      orders={orders}
       handleGetFeeds={() => {
         dispatch(getFeeds());
       }}
