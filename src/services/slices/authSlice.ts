@@ -67,6 +67,7 @@ export const authSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = fulfilled(action.payload.user);
       })
+      // ~~~~~~~~~~~~~~ updateUser ~~~~~~~~~~~~~ //
       .addCase(updateUser.pending, (state) => {
         state.user = waiting();
       })
