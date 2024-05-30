@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from '../../app/store';
 import feedDepot from '../../services/slices/feedSlice';
 import ingredientsDepot from '../../services/slices/ingredientsSlice';
+import userOrdersDepot from '../../services/slices/userOrdersSlice';
 import { OrderInfoUI } from '../ui/order-info';
 import { Preloader } from '../ui/preloader';
 
@@ -11,7 +12,7 @@ export const OrderInfo: FC = () => {
   const { number } = useParams<{ number: string }>();
   if (number === undefined || isNaN(parseInt(number))) return null;
 
-  const orders = useSelector(feedDepot.selectOrders) || [];
+  const orders = useSelector(userOrdersDepot.selectOrders) || [];
   const orderData = feedDepot.getOrderByNumber(orders, parseInt(number));
 
   const ingredients = useSelector(ingredientsDepot.selectIngredients) || [];
