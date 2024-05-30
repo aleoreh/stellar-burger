@@ -20,7 +20,10 @@ type Fulfilled<T> = {
  * Использование нескольких полей для описания процесса
  * initial -> pending -> rejected/fulfilled может приводить
  * к противоречивым состояниям, таким как:
- * { pending: true, error: someError } или { error: someError, data: someData }
+ *
+ * `{ pending: true, error: someError }` или
+ * `{ error: someError, data: someData }`
+ *
  * Для регулирования таких ситуаций используем этот паттерн,
  * который не допускает противоречивых состояний
  */
