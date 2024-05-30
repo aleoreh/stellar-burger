@@ -11,20 +11,17 @@ import {
   ResetPassword
 } from '@pages';
 import { useEffect } from 'react';
-import {
-  Route,
-  Routes,
-  createBrowserRouter,
-  useLocation,
-  useNavigate
-} from 'react-router-dom';
-import { useDispatch } from '../../app/store';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../app/store';
 import '../../index.css';
+import authDepot, { loginLocally } from '../../services/slices/authSlice';
 import { getFeeds } from '../../services/slices/feedSlice';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
+import userOrdersDepot from '../../services/slices/userOrdersSlice';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import styles from './app.module.css';
-import { loginLocally } from '../../services/slices/authSlice';
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 const App = () => {
   const location = useLocation();
@@ -32,11 +29,17 @@ const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const user = useSelector(authDepot.selectUser);
+
   useEffect(() => {
     dispatch(loginLocally());
     dispatch(getFeeds());
     dispatch(fetchIngredients());
   }, []);
+
+  useEffect(() => {
+    dispatch(userOrdersDepot.getUserOrders());
+  }, [user]);
 
   return (
     <div className={styles.app}>
