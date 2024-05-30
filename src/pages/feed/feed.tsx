@@ -1,6 +1,6 @@
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from '../../app/store';
 import feedDepot, { getFeeds } from '../../services/slices/feedSlice';
 
@@ -9,6 +9,10 @@ export const Feed: FC = () => {
 
   const isPending = useSelector(feedDepot.selectIsPending);
   const orders = useSelector(feedDepot.selectOrders) || [];
+
+  useEffect(() => {
+    dispatch(getFeeds());
+  }, []);
 
   return isPending ? (
     <Preloader />

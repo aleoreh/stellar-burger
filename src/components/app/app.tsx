@@ -33,7 +33,6 @@ const App = () => {
 
   useEffect(() => {
     dispatch(loginLocally());
-    dispatch(getFeeds());
     dispatch(fetchIngredients());
   }, []);
 
