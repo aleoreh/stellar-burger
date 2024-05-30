@@ -78,9 +78,11 @@ export const orderSlice = createSlice({
   selectors: {
     selectConstructorItems: (state) => state,
     selectIds: (state): Array<TConstructorIngredient['_id']> =>
-      [state.bun?._id || '', ...state.ingredients.map((x) => x._id)].filter(
-        (x) => x !== ''
-      ),
+      [
+        state.bun?._id || '',
+        ...state.ingredients.map((x) => x._id),
+        state.bun?._id || ''
+      ].filter((x) => x !== ''),
     selectIsReady: (state) => state.bun !== null && state.ingredients.length > 0
   },
   extraReducers: (builder) =>
