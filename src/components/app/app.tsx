@@ -12,12 +12,10 @@ import {
 } from '@pages';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from '../../app/store';
+import { useDispatch } from '../../app/store';
 import '../../index.css';
-import authDepot, { loginLocally } from '../../services/slices/authSlice';
-import { getFeeds } from '../../services/slices/feedSlice';
+import { loginLocally } from '../../services/slices/authSlice';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
-import userOrdersDepot from '../../services/slices/userOrdersSlice';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import styles from './app.module.css';
 
