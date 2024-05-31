@@ -20,8 +20,17 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
             clsx(styles.link, isActive && styles.link_active)
           }
         >
-          <BurgerIcon type={'primary'} />
-          <p className='text text_type_main-default ml-2 mr-10'>Конструктор</p>
+          {({ isActive }) => (
+            <>
+              <BurgerIcon
+                type={'primary'}
+                className={clsx(styles.svg, isActive && styles.svg_active)}
+              />{' '}
+              <p className='text text_type_main-default ml-2 mr-10'>
+                Конструктор
+              </p>
+            </>
+          )}
         </NavLink>
         <NavLink
           to='/feed'
@@ -29,8 +38,15 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
             clsx(styles.link, isActive && styles.link_active)
           }
         >
-          <ListIcon type={'primary'} />
-          <p className='text text_type_main-default ml-2'>Лента заказов</p>
+          {({ isActive }) => (
+            <>
+              <ListIcon
+                type={'primary'}
+                className={clsx(styles.svg, isActive && styles.svg_active)}
+              />
+              <p className='text text_type_main-default ml-2'>Лента заказов</p>
+            </>
+          )}
         </NavLink>
       </div>
       <div className={styles.logo}>
@@ -40,13 +56,23 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
         <NavLink
           to='/profile'
           className={({ isActive }) =>
-            clsx(styles.link, isActive && styles.link_active)
+            clsx(styles.link, isActive && userName && styles.link_active)
           }
         >
-          <ProfileIcon type={'primary'} />
-          <p className='text text_type_main-default ml-2'>
-            {userName || 'Личный кабинет'}
-          </p>
+          {({ isActive }) => (
+            <>
+              <ProfileIcon
+                type={'primary'}
+                className={clsx(
+                  styles.svg,
+                  isActive && userName && styles.svg_active
+                )}
+              />
+              <p className='text text_type_main-default ml-2'>
+                {userName || 'Личный кабинет'}
+              </p>
+            </>
+          )}
         </NavLink>
       </div>
     </nav>

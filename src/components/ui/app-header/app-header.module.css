@@ -35,3 +35,11 @@
   align-items: center;
   margin: 0 auto;
 }
+
+.svg {
+  fill: var(--text-inactive-color);
+}
+
+.svg_active {
+  fill: var(--text-primary-color);
+}
