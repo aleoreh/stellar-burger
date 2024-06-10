@@ -40,3 +40,38 @@ describe('Добавление ингредиентов', () => {
     });
   });
 });
+
+describe('Модальное окно ингредиента', () => {
+  it('открывает и закрывает модальное окно ингредиента', () => {
+    cy.visit('/');
+
+    const ingredientCy = cy
+      .get('*[data-cy="ingredients-category-title"]')
+      .get('*[data-cy="burger-ingredient"]')
+      .first();
+
+    // Закрытие по нажатию на кнопку
+
+    ingredientCy.click();
+
+    const modalCy1 = cy.contains('Детали ингредиента');
+
+    modalCy1.should('exist');
+
+    modalCy1.get('*[data-cy="modal-close-button"]').click();
+
+    modalCy1.should('not.exist');
+
+    // Закрытие по клику на оверлей
+
+    ingredientCy.click();
+
+    const modalCy2 = cy.contains('Детали ингредиента');
+
+    modalCy1.should('exist');
+
+    cy.get('*[data-cy="modal-overlay"]').click(0, 0, { force: true });
+
+    modalCy1.should('not.exist');
+  });
+});
