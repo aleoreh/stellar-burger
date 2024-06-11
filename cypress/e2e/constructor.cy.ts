@@ -75,3 +75,28 @@ describe('Модальное окно ингредиента', () => {
     modalCy1.should('not.exist');
   });
 });
+
+describe('Создание заказа', () => {
+  before(() => {
+    cy.setCookie('accessToken', 'accessToken');
+  });
+  after(() => {
+    cy.clearCookies();
+  });
+  it('правильно создаёт заказ', () => {
+    cy.visit('/', {
+      onBeforeLoad(win) {
+        win.localStorage.setItem('refreshToken', 'refreshToken');
+        win.localStorage.setItem(
+          'user',
+          JSON.stringify({
+            email: 'user@example.com',
+            name: 'user'
+          })
+        );
+      }
+    });
+
+    cy.clearLocalStorage();
+  });
+});
