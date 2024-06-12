@@ -19,33 +19,38 @@ beforeEach(() => {
 });
 
 describe('Добавление ингредиентов', () => {
-  it('добавляет ингредиенты в заказ', () => {
+  it('добавляет ингредиенты в конструктор', () => {
     cy.visit('/');
 
     cy.fixture(getIngredientsFixture).then(({ data }) => {
       const buns = data.filter(({ type }) => type === 'bun');
       const mains = data.filter(({ type }) => type === 'main');
 
+      // получаем раздел ингредиентов
       const ingredientsCategoryCy = cy.get(
         '*[data-cy="ingredients-category-title"]'
       );
 
+      // добавляем булочку
       ingredientsCategoryCy
         .get('*[data-cy="burger-ingredient"]')
         .filter(`:contains("${buns[0].name}")`)
         .contains('Добавить')
         .click();
 
+      // добавляем ингредиент
       ingredientsCategoryCy
         .get('*[data-cy="burger-ingredient"]')
         .filter(`:contains("${mains[0].name}")`)
         .contains('Добавить')
         .click();
 
+      // проверяем, что булочка присутствует в количестве двух штук
       cy.get('*[data-cy="constructor-element"]')
         .filter(`:contains("${buns[0].name}")`)
         .should('have.length', 2);
 
+      // проверяем наличие ингредиента
       cy.get('*[data-cy="burger-constructor-element"]')
         .filter(`:contains("${mains[0].name}")`)
         .should('have.length', 1);
