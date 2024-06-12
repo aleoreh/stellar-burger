@@ -1,7 +1,9 @@
 import { PayloadAction, configureStore, createAction } from '@reduxjs/toolkit';
 import authDepot from '../services/slices/authSlice';
 import feedDepot from '../services/slices/feedSlice';
-import ingredientsDepot from '../services/slices/ingredientsSlice';
+import ingredientsDepot, {
+  fetchIngredients
+} from '../services/slices/ingredientsSlice';
 import orderDepot from '../services/slices/orderSlice';
 import userOrdersDepot from '../services/slices/userOrdersSlice';
 import { TIngredient } from '../utils/types';
@@ -142,5 +144,33 @@ describe('Редуктор среза "order"', () => {
     const currentIngredients = orderDepot.selectIngredients(currentState);
 
     expect(currentIngredients[0].id).toBe(initialIngredients[1].id);
+  });
+});
+
+describe('Срез "ingredients" в асинхронных действиях', () => {
+  it('устанавливает ожидание при вызове действия', () => {
+    const { currentState } = dispatchAction(fetchIngredients.pending(''));
+    const isPending = ingredientsDepot.selectIsPending(currentState);
+
+    expect(isPending).toBe(true);
+  });
+
+  it('устанавливает ошибку при неуспешном выполнении действия', () => {
+    const errorText = 'ошибка';
+    const { currentState } = dispatchAction(
+      fetchIngredients.rejected(new Error(errorText), '')
+    );
+    const error = ingredientsDepot.selectError(currentState);
+
+    expect(error).toBe(errorText);
+  });
+
+  it('устанавливает состояние при успешном выполнении действия', () => {
+    const { currentState } = dispatchAction(
+      fetchIngredients.fulfilled(mockIngredients, '')
+    );
+    const currentIngredients = ingredientsDepot.selectIngredients(currentState);
+
+    expect(currentIngredients).toEqual(mockIngredients);
   });
 });
