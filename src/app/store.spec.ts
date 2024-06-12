@@ -49,6 +49,19 @@ const mockIngredients: TIngredient[] = [
     image: 'https://code.s3.yandex.net/react/code/meat-01.png',
     image_mobile: 'https://code.s3.yandex.net/react/code/meat-01-mobile.png',
     image_large: 'https://code.s3.yandex.net/react/code/meat-01-large.png'
+  },
+  {
+    _id: '643d69a5c3f7b9001cfa093e',
+    name: 'Филе Люминесцентного тетраодонтимформа',
+    type: 'main',
+    proteins: 44,
+    fat: 26,
+    carbohydrates: 85,
+    calories: 643,
+    price: 988,
+    image: 'https://code.s3.yandex.net/react/code/meat-03.png',
+    image_mobile: 'https://code.s3.yandex.net/react/code/meat-03-mobile.png',
+    image_large: 'https://code.s3.yandex.net/react/code/meat-03-large.png'
   }
 ];
 
@@ -117,5 +130,17 @@ describe('Редуктор среза "order"', () => {
     expect(
       currentIngredients.find((x) => x.id === initialIngredients[0].id)
     ).toBe(undefined);
+  });
+
+  it('может изменять порядок ингредиентов', () => {
+    mockIngredients.forEach((x) => dispatchAction(orderDepot.addIngredient(x)));
+
+    const initialState = store.getState();
+    const initialIngredients = orderDepot.selectIngredients(initialState);
+
+    const { currentState } = dispatchAction(orderDepot.moveDown(0));
+    const currentIngredients = orderDepot.selectIngredients(currentState);
+
+    expect(currentIngredients[0].id).toBe(initialIngredients[1].id);
   });
 });
