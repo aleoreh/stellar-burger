@@ -4,6 +4,17 @@ const getOrdersAllFixture = 'get_orders_all';
 
 const url = (path: string) => `${Cypress.env('BURGER_API_URL')}/${path}`;
 
+const ingredientsCategoryTitleCySelector =
+  '*[data-cy="ingredients-category-title"]';
+const burgerIngredientCySelector = '*[data-cy="burger-ingredient"]';
+const constructorElementCySelector = '*[data-cy="constructor-element"]';
+const burgerConstructorElementCySelector =
+  '*[data-cy="burger-constructor-element"]';
+const modalCySelector = '*[data-cy="modal"]';
+const modalCloseButtonCySelector = '*[data-cy="modal-close-button"]';
+const modalOverlayCySelector = '*[data-cy="modal-overlay"]';
+const burgerConstructorCySelector = '*[data-cy="burger-constructor"]';
+
 beforeEach(() => {
   cy.intercept('GET', url('ingredients'), {
     fixture: getIngredientsFixture
@@ -27,31 +38,29 @@ describe('Добавление ингредиентов', () => {
       const mains = data.filter(({ type }) => type === 'main');
 
       // получаем раздел ингредиентов
-      const ingredientsCategoryCy = cy.get(
-        '*[data-cy="ingredients-category-title"]'
-      );
+      const ingredientsCategoryCy = cy.get(ingredientsCategoryTitleCySelector);
 
       // добавляем булочку
       ingredientsCategoryCy
-        .get('*[data-cy="burger-ingredient"]')
+        .get(burgerIngredientCySelector)
         .filter(`:contains("${buns[0].name}")`)
         .contains('Добавить')
         .click();
 
       // добавляем ингредиент
       ingredientsCategoryCy
-        .get('*[data-cy="burger-ingredient"]')
+        .get(burgerIngredientCySelector)
         .filter(`:contains("${mains[0].name}")`)
         .contains('Добавить')
         .click();
 
       // проверяем, что булочка присутствует в количестве двух штук
-      cy.get('*[data-cy="constructor-element"]')
+      cy.get(constructorElementCySelector)
         .filter(`:contains("${buns[0].name}")`)
         .should('have.length', 2);
 
       // проверяем наличие ингредиента
-      cy.get('*[data-cy="burger-constructor-element"]')
+      cy.get(burgerConstructorElementCySelector)
         .filter(`:contains("${mains[0].name}")`)
         .should('have.length', 1);
     });
@@ -64,7 +73,7 @@ describe('Модальное окно ингредиента', () => {
 
     cy.fixture(getIngredientsFixture).then(({ data }) => {
       const ingredientCy = cy
-        .get('*[data-cy="ingredients-category-title"]')
+        .get(ingredientsCategoryTitleCySelector)
         .next()
         .contains(data[0].name);
 
@@ -73,7 +82,7 @@ describe('Модальное окно ингредиента', () => {
       ingredientCy.click();
 
       // проверим, что открылась нужная карточка ингредиента
-      const modalCy1 = cy.get('*[data-cy="modal"]');
+      const modalCy1 = cy.get(modalCySelector);
 
       modalCy1.should('exist');
 
@@ -81,7 +90,7 @@ describe('Модальное окно ингредиента', () => {
       modalCy1.contains(data[0].name).should('exist');
 
       // должно работать закрытие по щелчку на кнопку закрытия
-      modalCy1.get('*[data-cy="modal-close-button"]').click();
+      modalCy1.get(modalCloseButtonCySelector).click();
 
       modalCy1.should('not.exist');
 
@@ -89,10 +98,10 @@ describe('Модальное окно ингредиента', () => {
 
       ingredientCy.click();
 
-      const modalCy2 = cy.get('*[data-cy="modal"]');
+      const modalCy2 = cy.get(modalCySelector);
 
       // проверим возможность закрытия по щелчку вне карточки
-      cy.get('*[data-cy="modal-overlay"]').click(0, 0, { force: true });
+      cy.get(modalOverlayCySelector).click(0, 0, { force: true });
 
       modalCy2.should('not.exist');
     });
@@ -127,26 +136,24 @@ describe('Создание заказа', () => {
       const mains = data.filter(({ type }) => type === 'main');
 
       // находим раздел с ингредиентами
-      const ingredientsCategoryCy = cy.get(
-        '*[data-cy="ingredients-category-title"]'
-      );
+      const ingredientsCategoryCy = cy.get(ingredientsCategoryTitleCySelector);
 
       // щёлкаем по булке и одной начинке
       ingredientsCategoryCy
-        .get('*[data-cy="burger-ingredient"]')
+        .get(burgerIngredientCySelector)
         .filter(`:contains("${buns[0].name}")`)
         .contains('Добавить')
         .click();
 
       ingredientsCategoryCy
-        .get('*[data-cy="burger-ingredient"]')
+        .get(burgerIngredientCySelector)
         .filter(`:contains("${mains[0].name}")`)
         .contains('Добавить')
         .click();
 
       // находим раздел с составом заказа
       const constructorCy = cy
-        .get('*[data-cy="burger-constructor"]')
+        .get(burgerConstructorCySelector)
         .as('constructor');
 
       // щёлкаем на оформление заказа
@@ -160,7 +167,7 @@ describe('Создание заказа', () => {
         modalCy.should('contain', `${order.number}`);
 
         // закрываем модальное окно и проверяем, что оно закрыто
-        modalCy.get('*[data-cy="modal-close-button"]').click();
+        modalCy.get(modalCloseButtonCySelector).click();
         modalCy.should('not.exist');
       });
 
