@@ -8,11 +8,6 @@ beforeEach(() => {
     fixture: ingredientsFixture
   });
 
-  // /api/orders/all
-
-  // post https://norma.nomoreparties.space/api/orders
-  // {"ingredients":["643d69a5c3f7b9001cfa093c","643d69a5c3f7b9001cfa0941","643d69a5c3f7b9001cfa093c"]}
-  // {"success":true,"name":"Краторный био-марсианский бургер","order":{"number":3845}}
   cy.intercept('POST', url('orders'), {
     fixture: orderAnswer
   });
