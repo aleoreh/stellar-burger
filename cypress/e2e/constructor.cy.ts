@@ -1,8 +1,10 @@
 const ingredientsFixture = 'ingredients.json';
 const orderAnswer = 'order_answer.json';
 
+const url = (path: string) => `${Cypress.env('BURGER_API_URL')}/${path}`;
+
 beforeEach(() => {
-  cy.intercept('GET', `${Cypress.env('BURGER_API_URL')}/ingredients`, {
+  cy.intercept('GET', url('ingredients'), {
     fixture: ingredientsFixture
   });
 
@@ -11,7 +13,7 @@ beforeEach(() => {
   // post https://norma.nomoreparties.space/api/orders
   // {"ingredients":["643d69a5c3f7b9001cfa093c","643d69a5c3f7b9001cfa0941","643d69a5c3f7b9001cfa093c"]}
   // {"success":true,"name":"Краторный био-марсианский бургер","order":{"number":3845}}
-  cy.intercept('POST', `${Cypress.env('BURGER_API_URL')}/orders`, {
+  cy.intercept('POST', url('orders'), {
     fixture: orderAnswer
   });
 });
