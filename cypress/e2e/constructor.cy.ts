@@ -62,34 +62,40 @@ describe('Модальное окно ингредиента', () => {
   it('открывает и закрывает модальное окно ингредиента', () => {
     cy.visit('/');
 
-    const ingredientCy = cy
-      .get('*[data-cy="ingredients-category-title"]')
-      .get('*[data-cy="burger-ingredient"]')
-      .first();
+    cy.fixture(getIngredientsFixture).then(({ data }) => {
+      const ingredientCy = cy
+        .get('*[data-cy="ingredients-category-title"]')
+        .next()
+        .contains(data[0].name);
 
-    // Закрытие по нажатию на кнопку
+      // откроем карточку ингредиента
 
-    ingredientCy.click();
+      ingredientCy.click();
 
-    const modalCy1 = cy.contains('Детали ингредиента');
+      // проверим, что открылась нужная карточка ингредиента
+      const modalCy1 = cy.get('*[data-cy="modal"]');
 
-    modalCy1.should('exist');
+      modalCy1.should('exist');
 
-    modalCy1.get('*[data-cy="modal-close-button"]').click();
+      // модальное окно должно показывать правильный ингредиент
+      modalCy1.contains(data[0].name).should('exist');
 
-    modalCy1.should('not.exist');
+      // должно работать закрытие по щелчку на кнопку закрытия
+      modalCy1.get('*[data-cy="modal-close-button"]').click();
 
-    // Закрытие по клику на оверлей
+      modalCy1.should('not.exist');
 
-    ingredientCy.click();
+      // откроем карточку ингредиента заново
 
-    const modalCy2 = cy.contains('Детали ингредиента');
+      ingredientCy.click();
 
-    modalCy1.should('exist');
+      const modalCy2 = cy.get('*[data-cy="modal"]');
 
-    cy.get('*[data-cy="modal-overlay"]').click(0, 0, { force: true });
+      // проверим возможность закрытия по щелчку вне карточки
+      cy.get('*[data-cy="modal-overlay"]').click(0, 0, { force: true });
 
-    modalCy1.should('not.exist');
+      modalCy2.should('not.exist');
+    });
   });
 });
 
