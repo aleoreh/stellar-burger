@@ -73,4 +73,29 @@ describe('Редуктор среза "order"', () => {
 
     expect(currentIngredients[0]._id).toEqual(mockIngredient._id);
   });
+
+  it('может удалать ингредиент', () => {
+    const { currentState: ingredientAddedState } = dispatchAction(
+      orderDepot.addIngredient(mockIngredient)
+    );
+    const ingredientsAfterAdded =
+      orderDepot.selectIngredients(ingredientAddedState);
+
+    const { currentState: ingredientDeletedState } = dispatchAction(
+      orderDepot.deleteIngredient(ingredientsAfterAdded[0].id)
+    );
+    const ingredientsAfterDelete = orderDepot.selectIngredients(
+      ingredientDeletedState
+    );
+
+    // длина уменьшается не единицу
+    expect(ingredientsAfterDelete.length).toBe(
+      ingredientsAfterAdded.length - 1
+    );
+
+    // удалённый ингредиент отсутствует в массиве
+    expect(
+      ingredientsAfterDelete.find((x) => x.id === ingredientsAfterAdded[0].id)
+    ).toBe(undefined);
+  });
 });
