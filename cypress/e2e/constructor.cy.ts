@@ -1,5 +1,5 @@
-const ingredientsFixture = 'ingredients.json';
-const orderAnswer = 'order_answer.json';
+const ingredientsFixture = 'get_ingredients.json';
+const orderAnswer = 'post_orders.json';
 
 const url = (path: string) => `${Cypress.env('BURGER_API_URL')}/${path}`;
 
@@ -22,7 +22,7 @@ describe('Добавление ингредиентов', () => {
   it('добавляет ингредиенты в заказ', () => {
     cy.visit('/');
 
-    cy.fixture('ingredients').then(({ data }) => {
+    cy.fixture('get_ingredients').then(({ data }) => {
       const buns = data.filter(({ type }) => type === 'bun');
       const mains = data.filter(({ type }) => type === 'main');
 
@@ -111,7 +111,7 @@ describe('Создание заказа', () => {
       }
     });
 
-    cy.fixture('ingredients').then(({ data }) => {
+    cy.fixture('get_ingredients').then(({ data }) => {
       const buns = data.filter(({ type }) => type === 'bun');
       const mains = data.filter(({ type }) => type === 'main');
 
@@ -144,7 +144,7 @@ describe('Создание заказа', () => {
       // находим модальное окно с отправленным заказом
       const modalCy = cy.contains('идентификатор заказа').parent();
 
-      cy.fixture('order_answer').then(({ order }) => {
+      cy.fixture('post_orders').then(({ order }) => {
         // проверяем, что оно содержит номер заказа
         modalCy.should('contain', `${order.number}`);
 
