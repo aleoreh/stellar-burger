@@ -77,27 +77,22 @@ describe('Редуктор среза "order"', () => {
   });
 
   it('может удалать ингредиент', () => {
-    const { currentState: ingredientAddedState } = dispatchAction(
+    const { currentState: initialState } = dispatchAction(
       orderDepot.addIngredient(mockIngredients[0])
     );
-    const ingredientsAfterAdded =
-      orderDepot.selectIngredients(ingredientAddedState);
+    const initialIngredients = orderDepot.selectIngredients(initialState);
 
-    const { currentState: ingredientDeletedState } = dispatchAction(
-      orderDepot.deleteIngredient(ingredientsAfterAdded[0].id)
+    const { currentState } = dispatchAction(
+      orderDepot.deleteIngredient(initialIngredients[0].id)
     );
-    const ingredientsAfterDelete = orderDepot.selectIngredients(
-      ingredientDeletedState
-    );
+    const currentIngredients = orderDepot.selectIngredients(currentState);
 
     // длина уменьшается не единицу
-    expect(ingredientsAfterDelete.length).toBe(
-      ingredientsAfterAdded.length - 1
-    );
+    expect(currentIngredients.length).toBe(initialIngredients.length - 1);
 
     // удалённый ингредиент отсутствует в массиве
     expect(
-      ingredientsAfterDelete.find((x) => x.id === ingredientsAfterAdded[0].id)
+      currentIngredients.find((x) => x.id === initialIngredients[0].id)
     ).toBe(undefined);
   });
 });
