@@ -1,5 +1,6 @@
 const ingredientsFixture = 'get_ingredients.json';
 const orderAnswer = 'post_orders.json';
+const getOrdersAllFixture = 'get_orders_all';
 
 const url = (path: string) => `${Cypress.env('BURGER_API_URL')}/${path}`;
 
@@ -10,6 +11,10 @@ beforeEach(() => {
 
   cy.intercept('POST', url('orders'), {
     fixture: orderAnswer
+  });
+
+  cy.intercept('GET', url('orders/all'), {
+    fixture: getOrdersAllFixture
   });
 });
 
