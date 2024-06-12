@@ -102,8 +102,8 @@ describe('Создание заказа', () => {
         win.localStorage.setItem(
           'user',
           JSON.stringify({
-            email: 'user@example.com',
-            name: 'user'
+            email: 'test-user@example.com',
+            name: 'test-user'
           })
         );
       }
@@ -132,7 +132,9 @@ describe('Создание заказа', () => {
         .click();
 
       // находим раздел с составом заказа
-      const constructorCy = cy.get('*[data-cy="burger-constructor"]');
+      const constructorCy = cy
+        .get('*[data-cy="burger-constructor"]')
+        .as('constructor');
 
       // щёлкаем на оформление заказа
       constructorCy.contains('Оформить заказ').click();
@@ -140,10 +142,18 @@ describe('Создание заказа', () => {
       // находим модальное окно с отправленным заказом
       const modalCy = cy.contains('идентификатор заказа').parent();
 
-      // проверяем, что оно содержит номер заказа
       cy.fixture('order_answer').then(({ order }) => {
+        // проверяем, что оно содержит номер заказа
         modalCy.should('contain', `${order.number}`);
+
+        // закрываем модальное окно и проверяем, что оно закрыто
+        modalCy.get('*[data-cy="modal-close-button"]').click();
+        modalCy.should('not.exist');
       });
+
+      // убеждаемся, что конструктор очищен
+      cy.get('@constructor').contains('Выберите булки').should('exist');
+      cy.get('@constructor').contains('Выберите начинку').should('exist');
     });
 
     cy.clearLocalStorage();
