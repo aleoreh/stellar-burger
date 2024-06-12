@@ -1,7 +1,26 @@
-import { PayloadAction, createAction } from '@reduxjs/toolkit';
+import { PayloadAction, configureStore, createAction } from '@reduxjs/toolkit';
+import authDepot from '../services/slices/authSlice';
+import feedDepot from '../services/slices/feedSlice';
+import ingredientsDepot from '../services/slices/ingredientsSlice';
 import orderDepot from '../services/slices/orderSlice';
+import userOrdersDepot from '../services/slices/userOrdersSlice';
 import { TIngredient } from '../utils/types';
-import store, { RootState } from './store';
+
+type RootState = ReturnType<typeof store.getState>;
+
+const createStore = () =>
+  configureStore({
+    reducer: {
+      ingredients: ingredientsDepot.reducer,
+      order: orderDepot.reducer,
+      auth: authDepot.reducer,
+      feed: feedDepot.reducer,
+      userOrders: userOrdersDepot.reducer
+    },
+    devTools: process.env.NODE_ENV !== 'production'
+  });
+
+let store = createStore();
 
 const mockBun: TIngredient = {
   _id: '643d69a5c3f7b9001cfa093c',
@@ -43,6 +62,10 @@ const dispatchAction = <T>(
 
   return { initialState: initialState_, currentState: store.getState() };
 };
+
+beforeEach(() => {
+  store = createStore();
+});
 
 describe('store', () => {
   it('проходит инициализацию', () => {
