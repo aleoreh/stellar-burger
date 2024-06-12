@@ -38,18 +38,18 @@ describe('Добавление ингредиентов', () => {
       const mains = data.filter(({ type }) => type === 'main');
 
       // получаем раздел ингредиентов
-      const ingredientsCategoryCy = cy.get(ingredientsCategoryTitleCySelector);
+      cy.get(ingredientsCategoryTitleCySelector)
+        .get(burgerIngredientCySelector)
+        .as('ingredientsCategory');
 
       // добавляем булочку
-      ingredientsCategoryCy
-        .get(burgerIngredientCySelector)
+      cy.get('@ingredientsCategory')
         .filter(`:contains("${buns[0].name}")`)
         .contains('Добавить')
         .click();
 
       // добавляем ингредиент
-      ingredientsCategoryCy
-        .get(burgerIngredientCySelector)
+      cy.get('@ingredientsCategory')
         .filter(`:contains("${mains[0].name}")`)
         .contains('Добавить')
         .click();
@@ -72,38 +72,36 @@ describe('Модальное окно ингредиента', () => {
     cy.visit('/');
 
     cy.fixture(getIngredientsFixture).then(({ data }) => {
-      const ingredientCy = cy
-        .get(ingredientsCategoryTitleCySelector)
+      cy.get(ingredientsCategoryTitleCySelector)
         .next()
-        .contains(data[0].name);
+        .contains(data[0].name)
+        .as('ingredientCard');
 
       // откроем карточку ингредиента
 
-      ingredientCy.click();
+      cy.get('@ingredientCard').click();
 
       // проверим, что открылась нужная карточка ингредиента
-      const modalCy1 = cy.get(modalCySelector);
+      cy.get(modalCySelector).as('modal');
 
-      modalCy1.should('exist');
+      cy.get('@modal').should('exist');
 
       // модальное окно должно показывать правильный ингредиент
-      modalCy1.contains(data[0].name).should('exist');
+      cy.get('@modal').contains(data[0].name).should('exist');
 
       // должно работать закрытие по щелчку на кнопку закрытия
-      modalCy1.get(modalCloseButtonCySelector).click();
+      cy.get('@modal').get(modalCloseButtonCySelector).click();
 
-      modalCy1.should('not.exist');
+      cy.get('@modal').should('not.exist');
 
       // откроем карточку ингредиента заново
 
-      ingredientCy.click();
-
-      const modalCy2 = cy.get(modalCySelector);
+      cy.get('@ingredientCard').click();
 
       // проверим возможность закрытия по щелчку вне карточки
       cy.get(modalOverlayCySelector).click(0, 0, { force: true });
 
-      modalCy2.should('not.exist');
+      cy.get('@modal').should('not.exist');
     });
   });
 });
@@ -136,39 +134,37 @@ describe('Создание заказа', () => {
       const mains = data.filter(({ type }) => type === 'main');
 
       // находим раздел с ингредиентами
-      const ingredientsCategoryCy = cy.get(ingredientsCategoryTitleCySelector);
+      cy.get(ingredientsCategoryTitleCySelector)
+        .get(burgerIngredientCySelector)
+        .as('ingredientsCategory');
 
       // щёлкаем по булке и одной начинке
-      ingredientsCategoryCy
-        .get(burgerIngredientCySelector)
+      cy.get('@ingredientsCategory')
         .filter(`:contains("${buns[0].name}")`)
         .contains('Добавить')
         .click();
 
-      ingredientsCategoryCy
-        .get(burgerIngredientCySelector)
+      cy.get('@ingredientsCategory')
         .filter(`:contains("${mains[0].name}")`)
         .contains('Добавить')
         .click();
 
       // находим раздел с составом заказа
-      const constructorCy = cy
-        .get(burgerConstructorCySelector)
-        .as('constructor');
+      cy.get(burgerConstructorCySelector).as('constructor');
 
       // щёлкаем на оформление заказа
-      constructorCy.contains('Оформить заказ').click();
+      cy.get('@constructor').contains('Оформить заказ').click();
 
       // находим модальное окно с отправленным заказом
-      const modalCy = cy.contains('идентификатор заказа').parent();
+      cy.get(modalCySelector).as('modal');
 
       cy.fixture(postOrdersFixture).then(({ order }) => {
         // проверяем, что оно содержит номер заказа
-        modalCy.should('contain', `${order.number}`);
+        cy.get('@modal').should('contain', `${order.number}`);
 
         // закрываем модальное окно и проверяем, что оно закрыто
-        modalCy.get(modalCloseButtonCySelector).click();
-        modalCy.should('not.exist');
+        cy.get('@modal').get(modalCloseButtonCySelector).click();
+        cy.get('@modal').should('not.exist');
       });
 
       // убеждаемся, что конструктор очищен
