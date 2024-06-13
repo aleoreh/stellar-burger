@@ -1,0 +1,20 @@
+{
+  "success": true,
+  "orders": [
+    {
+      "_id": "666961f697ede0001d070227",
+      "ingredients": [
+        "643d69a5c3f7b9001cfa093c",
+        "643d69a5c3f7b9001cfa0941",
+        "643d69a5c3f7b9001cfa093c"
+      ],
+      "status": "done",
+      "name": "TEST! Краторный био-марсианский бургер",
+      "createdAt": "2024-06-12T08:53:10.125Z",
+      "updatedAt": "2024-06-12T08:53:10.497Z",
+      "number": 3845.42
+    }
+  ],
+  "total": 41804,
+  "totalToday": 91
+}
